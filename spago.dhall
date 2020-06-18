@@ -2,7 +2,9 @@
 Welcome to a Spago project!
 You can edit this file as you like.
 -}
-{ name = "my-project"
+{ name = "openapi"
+, license  = "Apache-2.0"
+, repository = "https://github.com/meeshkan/purescript-openapi"
 , dependencies =
   [ "console"
   , "effect"
