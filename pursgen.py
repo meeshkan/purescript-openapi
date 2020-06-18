@@ -33,9 +33,9 @@ def to_purescript(ipt, todo, done, toexpt, top=True):
             dashproto = [(dashize(cstr), _) for cstr, _ in accessors]
             dashvars = [x for x, _ in dashproto]
             fromJSONs = 'instance readForeign%s :: ReadForeign %s where\n  readImpl f = do\n%s\n    pure $ %s %s' % (nm, nm, '\n'.join([('    %s <- %s' % (dashize(cstr), 'readProp "%s" f >>= readImpl' % cstr if dstr[:5] != 'Maybe' else '(readProp "%s" f >>= readImpl) <|> (pure Nothing)' % cstr)) if cstr != 'x' else '    _x <- xify f' for i, (cstr, dstr) in enumerate(accessors)]), nm, '{' + ','.join([dashize(cstr) for (cstr, _) in accessors]) + '}' )
-            toJSONs = 'instance writeForeign%s :: WriteForeign %s where\n  writeImpl (%s f) =\n    writeImpl $ FO.fromFoldable (%s)\n' % (nm, nm, nm, ' <> '.join([('[Tuple "%s" (writeImpl f.%s)]' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if dstr[:5] != 'Maybe' else ('(maybe [] (\\x -> [Tuple "%s" (writeImpl x)]) f.%s)' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if cstr != 'x' else '(maybe [] (\\(OAIMap x) -> Map.toUnfoldable x) f._x)' for cstr, dstr in accessors]))
+            toJSONs = 'instance writeForeign%s :: WriteForeign %s where\n  writeImpl (%s f) =\n    writeImpl $ FO.fromFoldable (%s)\n' % (nm, nm, nm, ' <> '.join([('[Tuple "%s" (writeImpl f.%s)]' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if dstr[:5] != 'Maybe' else ('(maybe [] (\\x -> [Tuple "%s" (writeImpl x)]) f.%s)' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if cstr != 'x' else '(maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x)' for cstr, dstr in accessors]))
             #makeShow = 'instance show%s :: Show %s where\n  show (%s f) = show ("%s" <> "(" <> intercalate ", " (filter (not <<< null) [%s]) <> ")")' % (nm, nm, nm, nm, ', '.join(['"%s = " <> show f.%s' % (cstr[1:], cstr) if dstr[:5] != 'Maybe'  else 'maybe "" (\\x -> "%s = Just " <> show x) f.%s' % (cstr[1:], cstr) for cstr, dstr in dashproto]))
-            makeEq = 'instance eq%s :: Eq %s where\n  eq (%s f0) (%s f1) = %s\n' % (nm, nm, nm, nm, ' && '.join(['(f0.%s == f1.%s)' % (v,v) for (v, x) in dashproto if (v != '_x') and ('Foreign' not in x) ]))
+            makeEq = 'instance eq%s :: Eq %s where\n  eq (%s f0) (%s f1) = %s\n' % (nm, nm, nm, nm, ' && '.join(['(f0.%s == f1.%s)' % (v,v) for (v, x) in dashproto ]))
             toexpt = {'%s(..)' % nm, *toexpt}
             return comment + '\n' + data + '\n\n' + makeEq + '\n\n' + toJSONs + '\n' + fromJSONs + '\n', todo, {ipt, *done}, toexpt
         else:
@@ -45,7 +45,7 @@ def to_purescript(ipt, todo, done, toexpt, top=True):
     elif ipt == int:
         return 'Int', todo, {ipt, *done}, toexpt
     elif ipt == Any:
-        return 'Foreign', todo, {ipt, *done}, toexpt
+        return 'JSON', todo, {ipt, *done}, toexpt
     elif ipt == bool:
         return 'Boolean', todo, {ipt, *done}, toexpt
     elif ipt == float:
@@ -218,21 +218,23 @@ if __name__ == '__main__':
     done = {}
     out = 'module Data.OpenAPI.V300 (FOOBAR) where\n\n'
     out += '''import Prelude
-import Foreign(Foreign, readInt, readBoolean, readString, readArray, F)
-import Foreign.Object as FO
-import Foreign.Index(readProp)
-import Foreign.Keys(keys)
-import Data.Tuple(Tuple(..))
-import Data.Traversable(sequence)
-import Control.Alt((<|>))
-import Data.Generic.Rep(class Generic)
-import Data.Generic.Rep.Eq(genericEq)
-import Data.Maybe(Maybe(..), maybe)
-import Data.Array(findIndex)
-import Data.Either(Either(..))
-import Data.String.Utils(startsWith)
-import Simple.JSON(class ReadForeign, readImpl, class WriteForeign, writeImpl)
+import Control.Alt ((<|>))
+import Data.Array (findIndex)
+import Data.Either (Either(..))
+import Data.Generic.Rep (class Generic)
+import Data.Generic.Rep.Eq (genericEq)
 import Data.Map as Map
+import Data.Maybe (Maybe(..), maybe)
+import Data.Nullable (Nullable, null)
+import Data.String.Utils (startsWith)
+import Data.Traversable (sequence)
+import Data.Tuple (Tuple(..))
+import Foreign (F, Foreign, isNull, readArray, readBoolean, readInt, readNumber, readString)
+import Foreign.Index (readProp)
+import Foreign.Keys (keys)
+import Foreign.Object as FO
+import Simple.JSON (class ReadForeign, readImpl, class WriteForeign, writeImpl)
+
 
 newtype OAIMap b = OAIMap (Map.Map String b)
 derive newtype instance eqOAIMap :: (Eq a) => Eq (OAIMap a)
@@ -249,11 +251,27 @@ oaiMapToObject (OAIMap f) = FO.fromFoldable ((Map.toUnfoldable f) :: (Array (Tup
 instance writeForeignOAIMap :: (WriteForeign a) => WriteForeign (OAIMap a) where
   writeImpl f = writeImpl (oaiMapToObject f)
 
+data JSON = JObject (OAIMap JSON) | JArray (Array JSON) | JString String | JBoolean Boolean | JNumber Number | JNull
+derive instance genericJSON :: Generic JSON _
+
+instance readForeignJSON :: ReadForeign JSON where
+  readImpl f = if (isNull f) then pure JNull else (readNumber f >>= pure <<< JNumber) <|> (readBoolean f >>= pure <<< JBoolean) <|> (readString f >>= pure <<< JString) <|> (readArray f >>= sequence <<< map readImpl >>= pure <<< JArray) <|> (readImpl f >>= pure <<< JObject)
+
+instance writeForeignJSON :: WriteForeign JSON where
+  writeImpl (JObject j) = writeImpl $ oaiMapToObject j
+  writeImpl (JArray j) = writeImpl j
+  writeImpl (JBoolean j) = writeImpl j
+  writeImpl (JNumber j) = writeImpl j
+  writeImpl (JString j) = writeImpl j
+  writeImpl JNull = writeImpl (null :: Nullable Int) -- chose Int at random
+
+instance eqJSON :: Eq JSON where
+  eq a b = genericEq a b
 '''
     out += 'hack :: forall a b c. (a -> c) -> (a -> b -> c)\nhack o = (\\x -> (\\y -> o x))\n\n'
-    out += '''xify :: Foreign -> F (Maybe (OAIMap Foreign))
+    out += '''xify :: Foreign -> F (Maybe (OAIMap JSON))
 xify f = do
-  (OAIMap asMap) <- (readImpl f) :: (F (OAIMap Foreign))
+  (OAIMap asMap) <- (readImpl f) :: (F (OAIMap JSON))
   pure  $ Just (OAIMap (Map.filterKeys (startsWith "x-") asMap))
 '''
     out += 'isRef :: Foreign -> F Boolean\n'
@@ -297,6 +315,6 @@ eitherRealDeal l = Left l
         for item in {*todo}:
             o, todo, done, toexpt = to_purescript(item, todo, done, toexpt)
             out += o+'\n'
-    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', 'BooleanInt', 'OAIMap', *toexpt}))
+    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', 'BooleanInt', 'OAIMap', 'JSON', *toexpt}))
     with open('./src/Data/OpenAPI/V300.purs', 'w') as hask:
         hask.write(out)
