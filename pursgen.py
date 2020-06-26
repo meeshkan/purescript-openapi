@@ -15,7 +15,7 @@ def to_purescript(ipt, todo, done, toexpt, top=True):
         if top:
             nm = ipt.__name__
             comment = '-- |%s' % nm
-            data = 'data %s = %s {' % (nm, nm)
+            data = 'type T_%s = {' % (nm, )
             accessors = []
             dashize = lambda cstr : '_'+cstr if cstr != '$ref' else '_ref'
             for k, v in ipt.__dataclass_fields__.items():
@@ -36,8 +36,21 @@ def to_purescript(ipt, todo, done, toexpt, top=True):
             toJSONs = 'instance writeForeign%s :: WriteForeign %s where\n  writeImpl (%s f) =\n    writeImpl $ FO.fromFoldable (%s)\n' % (nm, nm, nm, ' <> '.join([('[Tuple "%s" (writeImpl f.%s)]' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if dstr[:5] != 'Maybe' else ('(maybe [] (\\x -> [Tuple "%s" (writeImpl x)]) f.%s)' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if cstr != 'x' else '(maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x)' for cstr, dstr in accessors]))
             #makeShow = 'instance show%s :: Show %s where\n  show (%s f) = show ("%s" <> "(" <> intercalate ", " (filter (not <<< null) [%s]) <> ")")' % (nm, nm, nm, nm, ', '.join(['"%s = " <> show f.%s' % (cstr[1:], cstr) if dstr[:5] != 'Maybe'  else 'maybe "" (\\x -> "%s = Just " <> show x) f.%s' % (cstr[1:], cstr) for cstr, dstr in dashproto]))
             makeEq = 'instance eq%s :: Eq %s where\n  eq (%s f0) (%s f1) = %s\n' % (nm, nm, nm, nm, ' && '.join(['(f0.%s == f1.%s)' % (v,v) for (v, x) in dashproto ]))
-            toexpt = {'%s(..)' % nm, *toexpt}
-            return comment + '\n' + data + '\n\n' + makeEq + '\n\n' + toJSONs + '\n' + fromJSONs + '\n', todo, {ipt, *done}, toexpt
+            toexpt = {'%s(..)' % nm, 'T_%s' % nm, '_%s' % nm, *toexpt}
+            prism = '''_%s ∷
+  Tuple
+    ( T_%s → %s
+    )
+    ( %s →
+      Maybe T_%s
+    )
+_%s =
+  Tuple %s
+    ( case _ of
+        %s a → Just a
+    )
+''' % (nm, nm, nm, nm, nm, nm, nm, nm)
+            return comment + '\n' + data + '\n\n' + ("newtype %s = %s T_%s\n\n" % (nm, nm, nm)) + makeEq + '\n\n' + toJSONs + '\n' + fromJSONs + '\n' + prism, todo, {ipt, *done}, toexpt
         else:
             return (ipt.__name__, {ipt, *todo}, done, toexpt)
     elif ipt == str:
@@ -79,21 +92,50 @@ instance writeForeignAdditionals :: WriteForeign Additionals where
   writeImpl (AdditionalSchema s) = writeImpl s
   writeImpl (AdditionalReference r) = writeImpl r
   writeImpl (AdditionalBoolean b) = writeImpl b
-'''
-                        out += '''
-eitherAdditionalSchema :: Additionals -> Either Additionals Schema
-eitherAdditionalSchema (AdditionalSchema r) = Right r
-eitherAdditionalSchema l = Left l
 
-eitherAdditionalReference :: Additionals -> Either Additionals Reference
-eitherAdditionalReference (AdditionalReference r) = Right r
-eitherAdditionalReference l = Left l
+_AdditionalSchema ∷
+  Tuple
+    ( Schema → Additionals
+    )
+    ( Additionals →
+      Maybe Schema
+    )
+_AdditionalSchema =
+  Tuple AdditionalSchema
+    ( case _ of
+        AdditionalSchema a → Just a
+        _ → Nothing
+    )
 
-eitherAdditionalBoolean :: Additionals -> Either Additionals Boolean
-eitherAdditionalBoolean (AdditionalBoolean r) = Right r
-eitherAdditionalBoolean l = Left l
+_AdditionalReference ∷
+  Tuple
+    ( Reference → Additionals
+    )
+    ( Additionals →
+      Maybe Reference
+    )
+_AdditionalReference =
+  Tuple AdditionalReference
+    ( case _ of
+        AdditionalReference a → Just a
+        _ → Nothing
+    )
+
+_AdditionalBoolean ∷
+  Tuple
+    ( Boolean → Additionals
+    )
+    ( Additionals →
+      Maybe Boolean
+    )
+_AdditionalBoolean =
+  Tuple AdditionalBoolean
+    ( case _ of
+        AdditionalBoolean a → Just a
+        _ → Nothing
+    )
 '''
-                        return out, todo, {ipt, *done}, {'Additionals(..)',  *toexpt}
+                        return out, todo, {ipt, *done}, {'Additionals(..)', '_AdditionalBoolean', '_AdditionalReference', '_AdditionalSchema',  *toexpt}
                     else:
                         return 'Maybe Additionals', {ipt, *todo}, done, toexpt
                 else:
@@ -122,19 +164,50 @@ instance writeForeignItems :: WriteForeign Items where
   writeImpl (SingleItemReference r) = writeImpl r
 '''
                         out += '''
-eitherItemsAsTuple :: Items -> Either Items (Array (ReferenceOr Schema))
-eitherItemsAsTuple (ItemsAsTuple r) = Right r
-eitherItemsAsTuple l = Left l
 
-eitherSingleItem :: Items -> Either Items Schema
-eitherSingleItem (SingleItem r) = Right r
-eitherSingleItem l = Left l
+_ItemsAsTuple ∷
+  Tuple
+    ( (Array (ReferenceOr Schema)) → Items
+    )
+    ( Items →
+      Maybe (Array (ReferenceOr Schema))
+    )
+_ItemsAsTuple =
+  Tuple ItemsAsTuple
+    ( case _ of
+        ItemsAsTuple a → Just a
+        _ → Nothing
+    )
 
-eitherSingleItemReference :: Items -> Either Items Reference
-eitherSingleItemReference (SingleItemReference r) = Right r
-eitherSingleItemReference l = Left l
+_SingleItem ∷
+  Tuple
+    ( Schema → Items
+    )
+    ( Items →
+      Maybe Schema
+    )
+_SingleItem =
+  Tuple SingleItem
+    ( case _ of
+        SingleItem a → Just a
+        _ → Nothing
+    )
+
+_SingleItemReference ∷
+  Tuple
+    ( Reference → Items
+    )
+    ( Items →
+      Maybe Reference
+    )
+_SingleItemReference =
+  Tuple SingleItemReference
+    ( case _ of
+        SingleItemReference a → Just a
+        _ → Nothing
+    )
 '''
-                        return out, todo, {ipt, *done}, {'Items(..)',  *toexpt}
+                        return out, todo, {ipt, *done}, {'Items(..)', '_SingleItemReference', '_SingleItem', '_ItemsAsTuple', *toexpt}
                     else:
                         return 'Maybe Items', {ipt, *todo}, done, toexpt
             if len(ipt.__args__) == 2 and (type(None) in ipt.__args__):
@@ -154,7 +227,13 @@ eitherSingleItemReference l = Left l
                 return 'Maybe BooleanInt', todo, done, toexpt
             if APIKeySecurityScheme in ipt.__args__:
                 if top:
-                    out = '''data SecuritySchema = APIKeySS APIKeySecurityScheme | HTTPSS HTTPSecurityScheme | OAuth2SS OAuth2SecurityScheme | OpenIdConnectSS OpenIdConnectSecurityScheme | StringSS String | ReferenceSS Reference
+                    out = '''data SecuritySchema = APIKeySS APIKeySecurityScheme | 
+      HTTPSS HTTPSecurityScheme |
+      OAuth2SS OAuth2SecurityScheme | 
+      OpenIdConnectSS OpenIdConnectSecurityScheme | 
+      StringSS String | 
+      ReferenceSS Reference
+
 derive instance genericSecuritySchema  :: Generic SecuritySchema  _
 instance eqSecuritySchema :: Eq SecuritySchema where
   eq = genericEq'''
@@ -184,23 +263,98 @@ instance writeForeignSecuritySchema :: WriteForeign SecuritySchema where
   writeImpl (ReferenceSS r) = writeImpl r
 '''
                     out += '''
-eitherAPIKeySS :: SecuritySchema -> Either SecuritySchema APIKeySecurityScheme
-eitherAPIKeySS (APIKeySS r) = Right r
-eitherAPIKeySS l = Left l
+_APIKeySS ∷
+  Tuple
+    ( APIKeySecurityScheme → SecuritySchema
+    )
+    ( SecuritySchema →
+      Maybe APIKeySecurityScheme
+    )
+_APIKeySS =
+  Tuple APIKeySS
+    ( case _ of
+        APIKeySS a → Just a
+        _ → Nothing
+    )
 
-eitherHTTPSS :: SecuritySchema -> Either SecuritySchema HTTPSecurityScheme
-eitherHTTPSS (HTTPSS r) = Right r
-eitherHTTPSS l = Left l
+_HTTPSS ∷
+  Tuple
+    ( HTTPSecurityScheme → SecuritySchema
+    )
+    ( SecuritySchema →
+      Maybe HTTPSecurityScheme
+    )
+_HTTPSS =
+  Tuple HTTPSS
+    ( case _ of
+        HTTPSS a → Just a
+        _ → Nothing
+    )
 
-eitherOAuth2SS :: SecuritySchema -> Either SecuritySchema OAuth2SecurityScheme
-eitherOAuth2SS (OAuth2SS r) = Right r
-eitherOAuth2SS l = Left l
+_OAuth2SS ∷
+  Tuple
+    ( OAuth2SecurityScheme → SecuritySchema
+    )
+    ( SecuritySchema →
+      Maybe OAuth2SecurityScheme
+    )
+_OAuth2SS =
+  Tuple OAuth2SS
+    ( case _ of
+        OAuth2SS a → Just a
+        _ → Nothing
+    )
 
-eitherOpenIdConnectSS :: SecuritySchema -> Either SecuritySchema OpenIdConnectSecurityScheme
-eitherOpenIdConnectSS (OpenIdConnectSS r) = Right r
-eitherOpenIdConnectSS l = Left l
+_OpenIdConnectSS ∷
+  Tuple
+    ( OpenIdConnectSecurityScheme → SecuritySchema
+    )
+    ( SecuritySchema →
+      Maybe OpenIdConnectSecurityScheme
+    )
+_OpenIdConnectSS =
+  Tuple OpenIdConnectSS
+    ( case _ of
+        OpenIdConnectSS a → Just a
+        _ → Nothing
+    )
+
+_StringSS ∷
+  Tuple
+    ( String → SecuritySchema
+    )
+    ( SecuritySchema →
+      Maybe String
+    )
+_StringSS =
+  Tuple StringSS
+    ( case _ of
+        StringSS a → Just a
+        _ → Nothing
+    )
+
+_ReferenceSS ∷
+  Tuple
+    ( Reference → SecuritySchema
+    )
+    ( SecuritySchema →
+      Maybe Reference
+    )
+_ReferenceSS =
+  Tuple ReferenceSS
+    ( case _ of
+        ReferenceSS a → Just a
+        _ → Nothing
+    )
 '''
-                    return out, {APIKeySecurityScheme, HTTPSecurityScheme, OAuth2SecurityScheme, OpenIdConnectSecurityScheme, str, Reference, *todo}, {ipt, *done}, {'SecuritySchema(..)', *toexpt}
+                    return out, {APIKeySecurityScheme, HTTPSecurityScheme, OAuth2SecurityScheme, OpenIdConnectSecurityScheme, str, Reference, *todo}, {ipt, *done}, {'SecuritySchema(..)', 
+                          '_APIKeySS',
+      '_HTTPSS' ,
+      '_OAuth2SS',
+      '_OpenIdConnectSS' , 
+      '_StringSS' , 
+      '_ReferenceSS' ,
+ *toexpt}
                 else:
                     return 'SecuritySchema', {ipt, *todo}, done, toexpt
         if ipt.__origin__ == Sequence:
@@ -220,7 +374,6 @@ if __name__ == '__main__':
     out += '''import Prelude
 import Control.Alt ((<|>))
 import Data.Array (findIndex)
-import Data.Either (Either(..))
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Eq (genericEq)
 import Data.Map as Map
@@ -245,7 +398,7 @@ instance readForeignOAIMap :: (ReadForeign a) => ReadForeign (OAIMap a) where
     pure (OAIMap $ Map.fromFoldable ((FO.toUnfoldable $ v) :: (Array (Tuple String a))))
 
 
-oaiMapToObject :: forall a. (WriteForeign a) => OAIMap a -> FO.Object a
+oaiMapToObject :: ∀ a. (WriteForeign a) => OAIMap a -> FO.Object a
 oaiMapToObject (OAIMap f) = FO.fromFoldable ((Map.toUnfoldable f) :: (Array (Tuple String a)))
 
 instance writeForeignOAIMap :: (WriteForeign a) => WriteForeign (OAIMap a) where
@@ -268,7 +421,7 @@ instance writeForeignJSON :: WriteForeign JSON where
 instance eqJSON :: Eq JSON where
   eq a b = genericEq a b
 '''
-    out += 'hack :: forall a b c. (a -> c) -> (a -> b -> c)\nhack o = (\\x -> (\\y -> o x))\n\n'
+    out += 'hack :: ∀ a b c. (a -> c) -> (a -> b -> c)\nhack o = (\\x -> (\\y -> o x))\n\n'
     out += '''xify :: Foreign -> F (Maybe (OAIMap JSON))
 xify f = do
   (OAIMap asMap) <- (readImpl f) :: (F (OAIMap JSON))
@@ -278,6 +431,36 @@ xify f = do
     out += 'isRef f = keys f >>= pure <<< (/=) Nothing <<< findIndex ((==) "$ref")\n\n'
     out += '''data ReferenceOr a = Ref Reference | RealDeal a
 derive instance eqReferenceOr :: (Eq a) => Eq (ReferenceOr a)
+
+
+_Ref ∷
+  ∀ a.
+  Tuple
+    ( Reference → ReferenceOr a
+    )
+    ( ReferenceOr a →
+      Maybe Reference
+    )
+_Ref =
+  Tuple Ref
+    ( case _ of
+        Ref a → Just a
+        _ → Nothing
+    )
+
+_RealDeal ∷ ∀ a.
+  Tuple
+    ( a → ReferenceOr a
+    )
+    ( ReferenceOr a →
+      Maybe a
+    )
+_RealDeal =
+  Tuple RealDeal
+    ( case _ of
+        RealDeal a → Just a
+        _ → Nothing
+    )
 '''
     out += '''instance readForeignReferenceOr :: (ReadForeign a) => ReadForeign (ReferenceOr a) where
   readImpl f = do
@@ -299,22 +482,42 @@ instance eqBooleanInt :: Eq BooleanInt where
 instance writeForeignBooleanInt :: WriteForeign BooleanInt where
   writeImpl (ABoolean b) = writeImpl b
   writeImpl (AnInt i) = writeImpl i
-'''
-    out += '''eitherRef :: forall a. ReferenceOr a -> Either (ReferenceOr a) Reference
-eitherRef (Ref r) = Right r
-eitherRef l = Left l
 
-eitherRealDeal :: forall a. ReferenceOr a -> Either (ReferenceOr a) a
-eitherRealDeal (RealDeal r) = Right r
-eitherRealDeal l = Left l
+_ABoolean ∷
+  Tuple
+    ( Boolean → BooleanInt
+    )
+    ( BooleanInt →
+      Maybe Boolean
+    )
+_ABoolean =
+  Tuple ABoolean
+    ( case _ of
+        ABoolean a → Just a
+        _ → Nothing
+    )
 
+_AnInt ∷
+  Tuple
+    ( Int → BooleanInt
+    )
+    ( BooleanInt →
+      Maybe Int
+    )
+_AnInt =
+  Tuple AnInt
+    ( case _ of
+        AnInt a → Just a
+        _ → Nothing
+    )
 '''
+
     toexpt = []
     while len(todo) > 0:
         todo = {x for x in todo if x not in done}
         for item in {*todo}:
             o, todo, done, toexpt = to_purescript(item, todo, done, toexpt)
             out += o+'\n'
-    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', 'BooleanInt', 'OAIMap', 'JSON', *toexpt}))
+    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', '_Ref', '_RealDeal', 'BooleanInt', 'OAIMap', '_ABoolean', '_AnInt', 'JSON', *toexpt}))
     with open('./src/Data/OpenAPI/V300.purs', 'w') as hask:
         hask.write(out)
