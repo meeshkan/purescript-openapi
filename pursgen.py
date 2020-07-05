@@ -532,6 +532,6 @@ _AnInt =
         for item in {*todo}:
             o, todo, done, toexpt = to_purescript(item, todo, done, toexpt)
             out += o+'\n'
-    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', '_Ref', '_RealDeal', 'BooleanInt', 'OAIMap', '_OAIMap', '_ABoolean', '_AnInt', 'JSON', *toexpt}))
+    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr(..)', '_Ref', '_RealDeal', 'BooleanInt', 'OAIMap(..)', '_OAIMap', '_ABoolean', '_AnInt', 'JSON(..)', *toexpt}))
     with open('./src/Data/OpenAPI/V300.purs', 'w', encoding='utf-8') as hask:
         hask.write(out)
