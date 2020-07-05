@@ -392,6 +392,20 @@ import Simple.JSON (class ReadForeign, readImpl, class WriteForeign, writeImpl)
 newtype OAIMap b = OAIMap (Map.Map String b)
 derive newtype instance eqOAIMap :: (Eq a) => Eq (OAIMap a)
 
+_OAIMap ::
+  forall b.
+  Tuple
+    ( Map.Map String b -> OAIMap b
+    )
+    ( OAIMap b ->
+      Maybe (Map.Map String b)
+    )
+_OAIMap =
+  Tuple OAIMap
+    ( case _ of
+        OAIMap a -> Just a
+    )
+
 instance readForeignOAIMap :: (ReadForeign a) => ReadForeign (OAIMap a) where
   readImpl f = do
     v <- (readImpl f)
@@ -518,6 +532,6 @@ _AnInt =
         for item in {*todo}:
             o, todo, done, toexpt = to_purescript(item, todo, done, toexpt)
             out += o+'\n'
-    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', '_Ref', '_RealDeal', 'BooleanInt', 'OAIMap', '_ABoolean', '_AnInt', 'JSON', *toexpt}))
-    with open('./src/Data/OpenAPI/V300.purs', 'w') as hask:
+    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr', '_Ref', '_RealDeal', 'BooleanInt', 'OAIMap', '_OAIMap', '_ABoolean', '_AnInt', 'JSON', *toexpt}))
+    with open('./src/Data/OpenAPI/V300.purs', 'w', encoding='utf-8') as hask:
         hask.write(out)
