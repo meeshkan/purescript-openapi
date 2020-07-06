@@ -89,5 +89,5 @@ main =
     $ runSpec [ consoleReporter ] do
         describe "stripe" do
           it "should parse, unparse and reparse correctly" $ openAPITest "oai/stripe.json"
-        describe "stripe" do
+        describe "slack" do
           it "should parse, unparse and reparse correctly" $ openAPITest "oai/slack.json"
