@@ -1,132 +1,134 @@
 module Data.OpenAPI.V300
-  ( XML(..)
-  , APIKeySecurityScheme(..)
-  , _License
-  , T_License
-  , _Contact
-  , _SingleItem
-  , SecuritySchema(..)
-  , T_PasswordOAuthFlow
-  , _ExternalDocumentation
-  , Discriminator(..)
-  , T_Reference
-  , _Ref
-  , T_Discriminator
-  , _RealDeal
-  , _PathItem
-  , OpenIdConnectSecurityScheme(..)
-  , _APIKeySecurityScheme
-  , ImplicitOAuthFlow(..)
-  , _OAIMap
-  , Components(..)
-  , _AdditionalReference
-  , Tag(..)
-  , Contact(..)
+  ( _Parameter
+  , _ABoolean
   , T_Header
-  , T_Link
-  , T_OpenIdConnectSecurityScheme
-  , _Encoding
-  , PathItem(..)
-  , _ServerVariable
+  , _HTTPSecurityScheme
   , _StringSS
-  , _AdditionalSchema
+  , PathItem(..)
   , _ReferenceSS
-  , _Schema
-  , T_Contact
-  , T_Server
-  , T_Parameter
-  , T_OAuthFlows
-  , T_Operation
-  , _Response
-  , ServerVariable(..)
-  , Header(..)
-  , _AuthorizationCodeOAuthFlow
-  , _RequestBody
+  , _PathItem
   , _ClientCredentialsFlow
-  , ExternalDocumentation(..)
+  , JSON(..)
+  , _XML
   , _Server
-  , _OpenIdConnectSecurityScheme
-  , T_Response
-  , Example(..)
-  , _SingleItemReference
+  , ImplicitOAuthFlow(..)
+  , _MediaType
+  , _ServerVariable
   , RequestBody(..)
-  , BooleanInt
-  , OAuthFlows(..)
-  , _PasswordOAuthFlow
-  , PasswordOAuthFlow(..)
-  , _Discriminator
-  , T_APIKeySecurityScheme
-  , _HTTPSS
-  , _AnInt
+  , _ExternalDocumentation
   , T_ClientCredentialsFlow
   , Operation(..)
-  , T_Info
-  , Schema(..)
-  , HTTPSecurityScheme(..)
-  , OpenAPIObject(..)
-  , T_Example
-  , Response(..)
-  , _ImplicitOAuthFlow
-  , AuthorizationCodeOAuthFlow(..)
+  , _AnInt
+  , ReferenceOr(..)
+  , _RequestBody
+  , T_AuthorizationCodeOAuthFlow
   , T_ImplicitOAuthFlow
+  , Discriminator(..)
+  , T_HTTPSecurityScheme
+  , _AdditionalSchema
+  , OpenIdConnectSecurityScheme(..)
+  , T_RequestBody
+  , _AuthorizationCodeOAuthFlow
+  , _SingleItemReference
+  , _License
+  , Header(..)
+  , _Reference
+  , Response(..)
+  , T_APIKeySecurityScheme
+  , _Header
+  , T_Response
+  , ClientCredentialsFlow(..)
+  , ExternalDocumentation(..)
+  , SecuritySchema(..)
+  , _Link
   , T_Encoding
+  , _Response
+  , _AdditionalBoolean
+  , T_ServerVariable
+  , _RealDeal
+  , _Operation
+  , HTTPSecurityScheme(..)
+  , Reference(..)
+  , T_Schema
+  , Schema(..)
+  , _SingleItem
+  , AuthorizationCodeOAuthFlow(..)
+  , License(..)
+  , T_Example
+  , T_Reference
+  , _ImplicitOAuthFlow
+  , _Encoding
+  , _OAuthFlows
+  , _Contact
   , OAuth2SecurityScheme(..)
   , _OAuth2SecurityScheme
-  , _Info
-  , Info(..)
-  , Link(..)
-  , _OAuthFlows
-  , T_MediaType
-  , T_RequestBody
-  , _Parameter
-  , _ABoolean
-  , _Components
-  , _Tag
-  , ReferenceOr(..)
-  , _Header
-  , Parameter(..)
-  , JSON(..)
-  , _Example
-  , Reference(..)
-  , T_ServerVariable
-  , _OpenAPIObject
-  , T_OAuth2SecurityScheme
-  , _AdditionalBoolean
-  , Additionals(..)
-  , _OpenIdConnectSS
-  , Server(..)
-  , _ItemsAsTuple
-  , _Reference
-  , _MediaType
-  , T_AuthorizationCodeOAuthFlow
-  , _XML
-  , OAIMap(..)
-  , T_XML
-  , Items(..)
   , T_PathItem
-  , T_HTTPSecurityScheme
-  , T_ExternalDocumentation
-  , Encoding(..)
-  , T_OpenAPIObject
-  , _Operation
+  , OAIMap(..)
+  , _Info
+  , _OpenAPIObject
+  , T_Info
+  , _AdditionalReference
+  , T_Server
+  , _OpenIdConnectSecurityScheme
   , T_Components
-  , T_Schema
-  , _APIKeySS
+  , OpenAPIObject(..)
+  , _Schema
   , T_Tag
-  , ClientCredentialsFlow(..)
-  , _OAuth2SS
-  , _HTTPSecurityScheme
+  , Parameter(..)
+  , _PasswordOAuthFlow
+  , Additionals(..)
+  , T_PasswordOAuthFlow
+  , _APIKeySecurityScheme
+  , Tag(..)
+  , XML(..)
+  , Components(..)
+  , _OAIMap
+  , _Ref
+  , T_XML
   , MediaType(..)
-  , _Link
-  , License(..)
+  , PasswordOAuthFlow(..)
+  , T_License
+  , T_Discriminator
+  , _Discriminator
+  , _HTTPSS
+  , _Tag
+  , T_Parameter
+  , Info(..)
+  , Server(..)
+  , Contact(..)
+  , T_Link
+  , T_OpenAPIObject
+  , _OpenIdConnectSS
+  , T_OpenIdConnectSecurityScheme
+  , T_MediaType
+  , BooleanInt(..)
+  , T_OAuthFlows
+  , _OAuth2SS
+  , _Example
+  , _Components
+  , Link(..)
+  , Example(..)
+  , Encoding(..)
+  , _ItemsAsTuple
+  , T_Contact
+  , T_ExternalDocumentation
+  , OAuthFlows(..)
+  , Items(..)
+  , ServerVariable(..)
+  , T_Operation
+  , T_OAuth2SecurityScheme
+  , APIKeySecurityScheme(..)
+  , _APIKeySS
   ) where
 
 import Prelude
 import Control.Alt ((<|>))
 import Data.Array (findIndex)
+import Data.Newtype (class Newtype)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Eq (genericEq)
 import Data.Map as Map
+import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Nullable (Nullable, null)
 import Data.String.Utils (startsWith)
@@ -140,6 +142,13 @@ import Simple.JSON (class ReadForeign, readImpl, class WriteForeign, writeImpl)
 
 newtype OAIMap b
   = OAIMap (Map.Map String b)
+
+derive instance newtypeOAIMap :: Newtype (OAIMap b) _
+
+derive instance genericOAIMap :: Generic (OAIMap b) _
+
+instance showOAIMap :: Show b => Show (OAIMap b) where
+  show = genericShow
 
 derive newtype instance eqOAIMap :: (Eq a) => Eq (OAIMap a)
 
@@ -192,6 +201,9 @@ instance writeForeignJSON :: WriteForeign JSON where
 instance eqJSON :: Eq JSON where
   eq a b = genericEq a b
 
+instance showJSON :: Show JSON where
+  show s = genericShow s
+
 hack :: ∀ a b c. (a -> c) -> (a -> b -> c)
 hack o = (\x -> (\y -> o x))
 
@@ -208,6 +220,11 @@ data ReferenceOr a
   | RealDeal a
 
 derive instance eqReferenceOr :: (Eq a) => Eq (ReferenceOr a)
+
+derive instance genericReferenceOr :: Generic (ReferenceOr a) _
+
+instance showReferenceOr :: (Show a) => Show (ReferenceOr a) where
+  show = genericShow
 
 _Ref ∷
   ∀ a.
@@ -254,6 +271,9 @@ data BooleanInt
 
 derive instance genericBooleanInt :: Generic BooleanInt _
 
+instance showBooleanInt :: Show BooleanInt where
+  show = genericShow
+
 instance eqBooleanInt :: Eq BooleanInt where
   eq = genericEq
 
@@ -299,8 +319,12 @@ type T_OpenAPIObject
 newtype OpenAPIObject
   = OpenAPIObject T_OpenAPIObject
 
-instance eqOpenAPIObject :: Eq OpenAPIObject where
-  eq (OpenAPIObject f0) (OpenAPIObject f1) = (f0._openapi == f1._openapi) && (f0._info == f1._info) && (f0._paths == f1._paths) && (f0._externalDocs == f1._externalDocs) && (f0._servers == f1._servers) && (f0._security == f1._security) && (f0._tags == f1._tags) && (f0._components == f1._components) && (f0._x == f1._x)
+derive instance eqOpenAPIObject :: Eq OpenAPIObject
+
+derive instance genericOpenAPIObject :: Generic OpenAPIObject _
+
+instance showOpenAPIObject :: Show OpenAPIObject where
+  show s = genericShow s
 
 instance writeForeignOpenAPIObject :: WriteForeign OpenAPIObject where
   writeImpl (OpenAPIObject f) = writeImpl $ FO.fromFoldable ([ Tuple "openapi" (writeImpl f._openapi) ] <> [ Tuple "info" (writeImpl f._info) ] <> [ Tuple "paths" (writeImpl f._paths) ] <> (maybe [] (\x -> [ Tuple "externalDocs" (writeImpl x) ]) f._externalDocs) <> (maybe [] (\x -> [ Tuple "servers" (writeImpl x) ]) f._servers) <> (maybe [] (\x -> [ Tuple "security" (writeImpl x) ]) f._security) <> (maybe [] (\x -> [ Tuple "tags" (writeImpl x) ]) f._tags) <> (maybe [] (\x -> [ Tuple "components" (writeImpl x) ]) f._components) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -331,76 +355,6 @@ _OpenAPIObject =
         OpenAPIObject a → Just a
     )
 
--- |Info
-type T_Info
-  = { _title :: String, _version :: String, _description :: (Maybe String), _termsOfService :: (Maybe String), _contact :: (Maybe Contact), _license :: (Maybe License), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype Info
-  = Info T_Info
-
-instance eqInfo :: Eq Info where
-  eq (Info f0) (Info f1) = (f0._title == f1._title) && (f0._version == f1._version) && (f0._description == f1._description) && (f0._termsOfService == f1._termsOfService) && (f0._contact == f1._contact) && (f0._license == f1._license) && (f0._x == f1._x)
-
-instance writeForeignInfo :: WriteForeign Info where
-  writeImpl (Info f) = writeImpl $ FO.fromFoldable ([ Tuple "title" (writeImpl f._title) ] <> [ Tuple "version" (writeImpl f._version) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "termsOfService" (writeImpl x) ]) f._termsOfService) <> (maybe [] (\x -> [ Tuple "contact" (writeImpl x) ]) f._contact) <> (maybe [] (\x -> [ Tuple "license" (writeImpl x) ]) f._license) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignInfo :: ReadForeign Info where
-  readImpl f = do
-    _title <- readProp "title" f >>= readImpl
-    _version <- readProp "version" f >>= readImpl
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _termsOfService <- (readProp "termsOfService" f >>= readImpl) <|> (pure Nothing)
-    _contact <- (readProp "contact" f >>= readImpl) <|> (pure Nothing)
-    _license <- (readProp "license" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ Info { _title, _version, _description, _termsOfService, _contact, _license, _x }
-
-_Info ∷
-  Tuple
-    ( T_Info → Info
-    )
-    ( Info →
-      Maybe T_Info
-    )
-_Info =
-  Tuple Info
-    ( case _ of
-        Info a → Just a
-    )
-
--- |ExternalDocumentation
-type T_ExternalDocumentation
-  = { _url :: String, _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype ExternalDocumentation
-  = ExternalDocumentation T_ExternalDocumentation
-
-instance eqExternalDocumentation :: Eq ExternalDocumentation where
-  eq (ExternalDocumentation f0) (ExternalDocumentation f1) = (f0._url == f1._url) && (f0._description == f1._description) && (f0._x == f1._x)
-
-instance writeForeignExternalDocumentation :: WriteForeign ExternalDocumentation where
-  writeImpl (ExternalDocumentation f) = writeImpl $ FO.fromFoldable ([ Tuple "url" (writeImpl f._url) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignExternalDocumentation :: ReadForeign ExternalDocumentation where
-  readImpl f = do
-    _url <- readProp "url" f >>= readImpl
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ ExternalDocumentation { _url, _description, _x }
-
-_ExternalDocumentation ∷
-  Tuple
-    ( T_ExternalDocumentation → ExternalDocumentation
-    )
-    ( ExternalDocumentation →
-      Maybe T_ExternalDocumentation
-    )
-_ExternalDocumentation =
-  Tuple ExternalDocumentation
-    ( case _ of
-        ExternalDocumentation a → Just a
-    )
-
 -- |Tag
 type T_Tag
   = { _name :: String, _description :: (Maybe String), _externalDocs :: (Maybe ExternalDocumentation), _x :: (Maybe ((OAIMap JSON))) }
@@ -408,8 +362,12 @@ type T_Tag
 newtype Tag
   = Tag T_Tag
 
-instance eqTag :: Eq Tag where
-  eq (Tag f0) (Tag f1) = (f0._name == f1._name) && (f0._description == f1._description) && (f0._externalDocs == f1._externalDocs) && (f0._x == f1._x)
+derive instance eqTag :: Eq Tag
+
+derive instance genericTag :: Generic Tag _
+
+instance showTag :: Show Tag where
+  show s = genericShow s
 
 instance writeForeignTag :: WriteForeign Tag where
   writeImpl (Tag f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "externalDocs" (writeImpl x) ]) f._externalDocs) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -435,38 +393,41 @@ _Tag =
         Tag a → Just a
     )
 
--- |Server
-type T_Server
-  = { _url :: String, _description :: (Maybe String), _variables :: (Maybe ((OAIMap ServerVariable))), _x :: (Maybe ((OAIMap JSON))) }
+-- |ExternalDocumentation
+type T_ExternalDocumentation
+  = { _url :: String, _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
 
-newtype Server
-  = Server T_Server
+newtype ExternalDocumentation
+  = ExternalDocumentation T_ExternalDocumentation
 
-instance eqServer :: Eq Server where
-  eq (Server f0) (Server f1) = (f0._url == f1._url) && (f0._description == f1._description) && (f0._variables == f1._variables) && (f0._x == f1._x)
+derive instance eqExternalDocumentation :: Eq ExternalDocumentation
 
-instance writeForeignServer :: WriteForeign Server where
-  writeImpl (Server f) = writeImpl $ FO.fromFoldable ([ Tuple "url" (writeImpl f._url) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "variables" (writeImpl x) ]) f._variables) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+derive instance genericExternalDocumentation :: Generic ExternalDocumentation _
 
-instance readForeignServer :: ReadForeign Server where
+instance showExternalDocumentation :: Show ExternalDocumentation where
+  show s = genericShow s
+
+instance writeForeignExternalDocumentation :: WriteForeign ExternalDocumentation where
+  writeImpl (ExternalDocumentation f) = writeImpl $ FO.fromFoldable ([ Tuple "url" (writeImpl f._url) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignExternalDocumentation :: ReadForeign ExternalDocumentation where
   readImpl f = do
     _url <- readProp "url" f >>= readImpl
     _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _variables <- (readProp "variables" f >>= readImpl) <|> (pure Nothing)
     _x <- xify f
-    pure $ Server { _url, _description, _variables, _x }
+    pure $ ExternalDocumentation { _url, _description, _x }
 
-_Server ∷
+_ExternalDocumentation ∷
   Tuple
-    ( T_Server → Server
+    ( T_ExternalDocumentation → ExternalDocumentation
     )
-    ( Server →
-      Maybe T_Server
+    ( ExternalDocumentation →
+      Maybe T_ExternalDocumentation
     )
-_Server =
-  Tuple Server
+_ExternalDocumentation =
+  Tuple ExternalDocumentation
     ( case _ of
-        Server a → Just a
+        ExternalDocumentation a → Just a
     )
 
 -- |PathItem
@@ -476,8 +437,12 @@ type T_PathItem
 newtype PathItem
   = PathItem T_PathItem
 
-instance eqPathItem :: Eq PathItem where
-  eq (PathItem f0) (PathItem f1) = (f0._summary == f1._summary) && (f0._description == f1._description) && (f0._servers == f1._servers) && (f0._parameters == f1._parameters) && (f0._get == f1._get) && (f0._put == f1._put) && (f0._post == f1._post) && (f0._delete == f1._delete) && (f0._options == f1._options) && (f0._head == f1._head) && (f0._patch == f1._patch) && (f0._trace == f1._trace) && (f0._ref == f1._ref) && (f0._x == f1._x)
+derive instance eqPathItem :: Eq PathItem
+
+derive instance genericPathItem :: Generic PathItem _
+
+instance showPathItem :: Show PathItem where
+  show s = genericShow s
 
 instance writeForeignPathItem :: WriteForeign PathItem where
   writeImpl (PathItem f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "summary" (writeImpl x) ]) f._summary) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "servers" (writeImpl x) ]) f._servers) <> (maybe [] (\x -> [ Tuple "parameters" (writeImpl x) ]) f._parameters) <> (maybe [] (\x -> [ Tuple "get" (writeImpl x) ]) f._get) <> (maybe [] (\x -> [ Tuple "put" (writeImpl x) ]) f._put) <> (maybe [] (\x -> [ Tuple "post" (writeImpl x) ]) f._post) <> (maybe [] (\x -> [ Tuple "delete" (writeImpl x) ]) f._delete) <> (maybe [] (\x -> [ Tuple "options" (writeImpl x) ]) f._options) <> (maybe [] (\x -> [ Tuple "head" (writeImpl x) ]) f._head) <> (maybe [] (\x -> [ Tuple "patch" (writeImpl x) ]) f._patch) <> (maybe [] (\x -> [ Tuple "trace" (writeImpl x) ]) f._trace) <> (maybe [] (\x -> [ Tuple "$ref" (writeImpl x) ]) f._ref) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -520,8 +485,12 @@ type T_Components
 newtype Components
   = Components T_Components
 
-instance eqComponents :: Eq Components where
-  eq (Components f0) (Components f1) = (f0._schemas == f1._schemas) && (f0._responses == f1._responses) && (f0._parameters == f1._parameters) && (f0._examples == f1._examples) && (f0._requestBodies == f1._requestBodies) && (f0._headers == f1._headers) && (f0._securitySchemes == f1._securitySchemes) && (f0._links == f1._links) && (f0._callbacks == f1._callbacks) && (f0._x == f1._x)
+derive instance eqComponents :: Eq Components
+
+derive instance genericComponents :: Generic Components _
+
+instance showComponents :: Show Components where
+  show s = genericShow s
 
 instance writeForeignComponents :: WriteForeign Components where
   writeImpl (Components f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "schemas" (writeImpl x) ]) f._schemas) <> (maybe [] (\x -> [ Tuple "responses" (writeImpl x) ]) f._responses) <> (maybe [] (\x -> [ Tuple "parameters" (writeImpl x) ]) f._parameters) <> (maybe [] (\x -> [ Tuple "examples" (writeImpl x) ]) f._examples) <> (maybe [] (\x -> [ Tuple "requestBodies" (writeImpl x) ]) f._requestBodies) <> (maybe [] (\x -> [ Tuple "headers" (writeImpl x) ]) f._headers) <> (maybe [] (\x -> [ Tuple "securitySchemes" (writeImpl x) ]) f._securitySchemes) <> (maybe [] (\x -> [ Tuple "links" (writeImpl x) ]) f._links) <> (maybe [] (\x -> [ Tuple "callbacks" (writeImpl x) ]) f._callbacks) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -553,142 +522,131 @@ _Components =
         Components a → Just a
     )
 
--- |Schema
-type T_Schema
-  = { _title :: (Maybe String), _multipleOf :: (Maybe Number), _maximum :: (Maybe Number), _exclusiveMaximum :: (Maybe BooleanInt), _minimum :: (Maybe Number), _exclusiveMinimum :: (Maybe BooleanInt), _maxLength :: (Maybe Int), _minLength :: (Maybe Int), _pattern :: (Maybe String), _maxItems :: (Maybe Int), _minItems :: (Maybe Int), _uniqueItems :: (Maybe Boolean), _maxProperties :: (Maybe Int), _minProperties :: (Maybe Int), _required :: (Maybe ((Array String))), _enum :: (Maybe ((Array JSON))), _allOf :: (Maybe ((Array (ReferenceOr Schema)))), _oneOf :: (Maybe ((Array (ReferenceOr Schema)))), _anyOf :: (Maybe ((Array (ReferenceOr Schema)))), _items :: (Maybe Items), _properties :: (Maybe ((OAIMap ((ReferenceOr Schema))))), _additionalProperties :: (Maybe Additionals), _description :: (Maybe String), _default :: (Maybe JSON), _nullable :: (Maybe Boolean), _discriminator :: (Maybe Discriminator), _readOnly :: (Maybe Boolean), _writeOnly :: (Maybe Boolean), _example :: (Maybe JSON), _externalDocs :: (Maybe ExternalDocumentation), _deprecated :: (Maybe Boolean), _xml :: (Maybe XML), _format :: (Maybe String), _type :: (Maybe String), _not :: (Maybe (ReferenceOr Schema)), _x :: (Maybe ((OAIMap JSON))) }
+-- |Info
+type T_Info
+  = { _title :: String, _version :: String, _description :: (Maybe String), _termsOfService :: (Maybe String), _contact :: (Maybe Contact), _license :: (Maybe License), _x :: (Maybe ((OAIMap JSON))) }
 
-newtype Schema
-  = Schema T_Schema
+newtype Info
+  = Info T_Info
 
-instance eqSchema :: Eq Schema where
-  eq (Schema f0) (Schema f1) = (f0._title == f1._title) && (f0._multipleOf == f1._multipleOf) && (f0._maximum == f1._maximum) && (f0._exclusiveMaximum == f1._exclusiveMaximum) && (f0._minimum == f1._minimum) && (f0._exclusiveMinimum == f1._exclusiveMinimum) && (f0._maxLength == f1._maxLength) && (f0._minLength == f1._minLength) && (f0._pattern == f1._pattern) && (f0._maxItems == f1._maxItems) && (f0._minItems == f1._minItems) && (f0._uniqueItems == f1._uniqueItems) && (f0._maxProperties == f1._maxProperties) && (f0._minProperties == f1._minProperties) && (f0._required == f1._required) && (f0._enum == f1._enum) && (f0._allOf == f1._allOf) && (f0._oneOf == f1._oneOf) && (f0._anyOf == f1._anyOf) && (f0._items == f1._items) && (f0._properties == f1._properties) && (f0._additionalProperties == f1._additionalProperties) && (f0._description == f1._description) && (f0._default == f1._default) && (f0._nullable == f1._nullable) && (f0._discriminator == f1._discriminator) && (f0._readOnly == f1._readOnly) && (f0._writeOnly == f1._writeOnly) && (f0._example == f1._example) && (f0._externalDocs == f1._externalDocs) && (f0._deprecated == f1._deprecated) && (f0._xml == f1._xml) && (f0._format == f1._format) && (f0._type == f1._type) && (f0._not == f1._not) && (f0._x == f1._x)
+derive instance eqInfo :: Eq Info
 
-instance writeForeignSchema :: WriteForeign Schema where
-  writeImpl (Schema f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "title" (writeImpl x) ]) f._title) <> (maybe [] (\x -> [ Tuple "multipleOf" (writeImpl x) ]) f._multipleOf) <> (maybe [] (\x -> [ Tuple "maximum" (writeImpl x) ]) f._maximum) <> (maybe [] (\x -> [ Tuple "exclusiveMaximum" (writeImpl x) ]) f._exclusiveMaximum) <> (maybe [] (\x -> [ Tuple "minimum" (writeImpl x) ]) f._minimum) <> (maybe [] (\x -> [ Tuple "exclusiveMinimum" (writeImpl x) ]) f._exclusiveMinimum) <> (maybe [] (\x -> [ Tuple "maxLength" (writeImpl x) ]) f._maxLength) <> (maybe [] (\x -> [ Tuple "minLength" (writeImpl x) ]) f._minLength) <> (maybe [] (\x -> [ Tuple "pattern" (writeImpl x) ]) f._pattern) <> (maybe [] (\x -> [ Tuple "maxItems" (writeImpl x) ]) f._maxItems) <> (maybe [] (\x -> [ Tuple "minItems" (writeImpl x) ]) f._minItems) <> (maybe [] (\x -> [ Tuple "uniqueItems" (writeImpl x) ]) f._uniqueItems) <> (maybe [] (\x -> [ Tuple "maxProperties" (writeImpl x) ]) f._maxProperties) <> (maybe [] (\x -> [ Tuple "minProperties" (writeImpl x) ]) f._minProperties) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\x -> [ Tuple "enum" (writeImpl x) ]) f._enum) <> (maybe [] (\x -> [ Tuple "allOf" (writeImpl x) ]) f._allOf) <> (maybe [] (\x -> [ Tuple "oneOf" (writeImpl x) ]) f._oneOf) <> (maybe [] (\x -> [ Tuple "anyOf" (writeImpl x) ]) f._anyOf) <> (maybe [] (\x -> [ Tuple "items" (writeImpl x) ]) f._items) <> (maybe [] (\x -> [ Tuple "properties" (writeImpl x) ]) f._properties) <> (maybe [] (\x -> [ Tuple "additionalProperties" (writeImpl x) ]) f._additionalProperties) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "default" (writeImpl x) ]) f._default) <> (maybe [] (\x -> [ Tuple "nullable" (writeImpl x) ]) f._nullable) <> (maybe [] (\x -> [ Tuple "discriminator" (writeImpl x) ]) f._discriminator) <> (maybe [] (\x -> [ Tuple "readOnly" (writeImpl x) ]) f._readOnly) <> (maybe [] (\x -> [ Tuple "writeOnly" (writeImpl x) ]) f._writeOnly) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "externalDocs" (writeImpl x) ]) f._externalDocs) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "xml" (writeImpl x) ]) f._xml) <> (maybe [] (\x -> [ Tuple "format" (writeImpl x) ]) f._format) <> (maybe [] (\x -> [ Tuple "type" (writeImpl x) ]) f._type) <> (maybe [] (\x -> [ Tuple "not" (writeImpl x) ]) f._not) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+derive instance genericInfo :: Generic Info _
 
-instance readForeignSchema :: ReadForeign Schema where
+instance showInfo :: Show Info where
+  show s = genericShow s
+
+instance writeForeignInfo :: WriteForeign Info where
+  writeImpl (Info f) = writeImpl $ FO.fromFoldable ([ Tuple "title" (writeImpl f._title) ] <> [ Tuple "version" (writeImpl f._version) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "termsOfService" (writeImpl x) ]) f._termsOfService) <> (maybe [] (\x -> [ Tuple "contact" (writeImpl x) ]) f._contact) <> (maybe [] (\x -> [ Tuple "license" (writeImpl x) ]) f._license) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignInfo :: ReadForeign Info where
   readImpl f = do
-    _title <- (readProp "title" f >>= readImpl) <|> (pure Nothing)
-    _multipleOf <- (readProp "multipleOf" f >>= readImpl) <|> (pure Nothing)
-    _maximum <- (readProp "maximum" f >>= readImpl) <|> (pure Nothing)
-    _exclusiveMaximum <- (readProp "exclusiveMaximum" f >>= readImpl) <|> (pure Nothing)
-    _minimum <- (readProp "minimum" f >>= readImpl) <|> (pure Nothing)
-    _exclusiveMinimum <- (readProp "exclusiveMinimum" f >>= readImpl) <|> (pure Nothing)
-    _maxLength <- (readProp "maxLength" f >>= readImpl) <|> (pure Nothing)
-    _minLength <- (readProp "minLength" f >>= readImpl) <|> (pure Nothing)
-    _pattern <- (readProp "pattern" f >>= readImpl) <|> (pure Nothing)
-    _maxItems <- (readProp "maxItems" f >>= readImpl) <|> (pure Nothing)
-    _minItems <- (readProp "minItems" f >>= readImpl) <|> (pure Nothing)
-    _uniqueItems <- (readProp "uniqueItems" f >>= readImpl) <|> (pure Nothing)
-    _maxProperties <- (readProp "maxProperties" f >>= readImpl) <|> (pure Nothing)
-    _minProperties <- (readProp "minProperties" f >>= readImpl) <|> (pure Nothing)
+    _title <- readProp "title" f >>= readImpl
+    _version <- readProp "version" f >>= readImpl
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _termsOfService <- (readProp "termsOfService" f >>= readImpl) <|> (pure Nothing)
+    _contact <- (readProp "contact" f >>= readImpl) <|> (pure Nothing)
+    _license <- (readProp "license" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Info { _title, _version, _description, _termsOfService, _contact, _license, _x }
+
+_Info ∷
+  Tuple
+    ( T_Info → Info
+    )
+    ( Info →
+      Maybe T_Info
+    )
+_Info =
+  Tuple Info
+    ( case _ of
+        Info a → Just a
+    )
+
+-- |Server
+type T_Server
+  = { _url :: String, _description :: (Maybe String), _variables :: (Maybe ((OAIMap ServerVariable))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Server
+  = Server T_Server
+
+derive instance eqServer :: Eq Server
+
+derive instance genericServer :: Generic Server _
+
+instance showServer :: Show Server where
+  show s = genericShow s
+
+instance writeForeignServer :: WriteForeign Server where
+  writeImpl (Server f) = writeImpl $ FO.fromFoldable ([ Tuple "url" (writeImpl f._url) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "variables" (writeImpl x) ]) f._variables) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignServer :: ReadForeign Server where
+  readImpl f = do
+    _url <- readProp "url" f >>= readImpl
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _variables <- (readProp "variables" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Server { _url, _description, _variables, _x }
+
+_Server ∷
+  Tuple
+    ( T_Server → Server
+    )
+    ( Server →
+      Maybe T_Server
+    )
+_Server =
+  Tuple Server
+    ( case _ of
+        Server a → Just a
+    )
+
+-- |Parameter
+type T_Parameter
+  = { _name :: String, _in :: String, _description :: (Maybe String), _required :: (Maybe Boolean), _deprecated :: (Maybe Boolean), _allowEmptyValue :: (Maybe Boolean), _style :: (Maybe String), _explode :: (Maybe Boolean), _allowReserved :: (Maybe Boolean), _schema :: (Maybe (ReferenceOr Schema)), _content :: (Maybe ((OAIMap MediaType))), _example :: (Maybe JSON), _examples :: (Maybe ((OAIMap ((ReferenceOr Example))))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Parameter
+  = Parameter T_Parameter
+
+derive instance eqParameter :: Eq Parameter
+
+derive instance genericParameter :: Generic Parameter _
+
+instance showParameter :: Show Parameter where
+  show s = genericShow s
+
+instance writeForeignParameter :: WriteForeign Parameter where
+  writeImpl (Parameter f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> [ Tuple "in" (writeImpl f._in) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "allowEmptyValue" (writeImpl x) ]) f._allowEmptyValue) <> (maybe [] (\x -> [ Tuple "style" (writeImpl x) ]) f._style) <> (maybe [] (\x -> [ Tuple "explode" (writeImpl x) ]) f._explode) <> (maybe [] (\x -> [ Tuple "allowReserved" (writeImpl x) ]) f._allowReserved) <> (maybe [] (\x -> [ Tuple "schema" (writeImpl x) ]) f._schema) <> (maybe [] (\x -> [ Tuple "content" (writeImpl x) ]) f._content) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "examples" (writeImpl x) ]) f._examples) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignParameter :: ReadForeign Parameter where
+  readImpl f = do
+    _name <- readProp "name" f >>= readImpl
+    _in <- readProp "in" f >>= readImpl
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
     _required <- (readProp "required" f >>= readImpl) <|> (pure Nothing)
-    _enum <- (readProp "enum" f >>= readImpl) <|> (pure Nothing)
-    _allOf <- (readProp "allOf" f >>= readImpl) <|> (pure Nothing)
-    _oneOf <- (readProp "oneOf" f >>= readImpl) <|> (pure Nothing)
-    _anyOf <- (readProp "anyOf" f >>= readImpl) <|> (pure Nothing)
-    _items <- (readProp "items" f >>= readImpl) <|> (pure Nothing)
-    _properties <- (readProp "properties" f >>= readImpl) <|> (pure Nothing)
-    _additionalProperties <- (readProp "additionalProperties" f >>= readImpl) <|> (pure Nothing)
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _default <- (readProp "default" f >>= readImpl) <|> (pure Nothing)
-    _nullable <- (readProp "nullable" f >>= readImpl) <|> (pure Nothing)
-    _discriminator <- (readProp "discriminator" f >>= readImpl) <|> (pure Nothing)
-    _readOnly <- (readProp "readOnly" f >>= readImpl) <|> (pure Nothing)
-    _writeOnly <- (readProp "writeOnly" f >>= readImpl) <|> (pure Nothing)
-    _example <- (readProp "example" f >>= readImpl) <|> (pure Nothing)
-    _externalDocs <- (readProp "externalDocs" f >>= readImpl) <|> (pure Nothing)
     _deprecated <- (readProp "deprecated" f >>= readImpl) <|> (pure Nothing)
-    _xml <- (readProp "xml" f >>= readImpl) <|> (pure Nothing)
-    _format <- (readProp "format" f >>= readImpl) <|> (pure Nothing)
-    _type <- (readProp "type" f >>= readImpl) <|> (pure Nothing)
-    _not <- (readProp "not" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ Schema { _title, _multipleOf, _maximum, _exclusiveMaximum, _minimum, _exclusiveMinimum, _maxLength, _minLength, _pattern, _maxItems, _minItems, _uniqueItems, _maxProperties, _minProperties, _required, _enum, _allOf, _oneOf, _anyOf, _items, _properties, _additionalProperties, _description, _default, _nullable, _discriminator, _readOnly, _writeOnly, _example, _externalDocs, _deprecated, _xml, _format, _type, _not, _x }
-
-_Schema ∷
-  Tuple
-    ( T_Schema → Schema
-    )
-    ( Schema →
-      Maybe T_Schema
-    )
-_Schema =
-  Tuple Schema
-    ( case _ of
-        Schema a → Just a
-    )
-
--- |Response
-type T_Response
-  = { _description :: String, _headers :: (Maybe ((OAIMap ((ReferenceOr Header))))), _content :: (Maybe ((OAIMap MediaType))), _links :: (Maybe ((OAIMap ((ReferenceOr Link))))), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype Response
-  = Response T_Response
-
-instance eqResponse :: Eq Response where
-  eq (Response f0) (Response f1) = (f0._description == f1._description) && (f0._headers == f1._headers) && (f0._content == f1._content) && (f0._links == f1._links) && (f0._x == f1._x)
-
-instance writeForeignResponse :: WriteForeign Response where
-  writeImpl (Response f) = writeImpl $ FO.fromFoldable ([ Tuple "description" (writeImpl f._description) ] <> (maybe [] (\x -> [ Tuple "headers" (writeImpl x) ]) f._headers) <> (maybe [] (\x -> [ Tuple "content" (writeImpl x) ]) f._content) <> (maybe [] (\x -> [ Tuple "links" (writeImpl x) ]) f._links) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignResponse :: ReadForeign Response where
-  readImpl f = do
-    _description <- readProp "description" f >>= readImpl
-    _headers <- (readProp "headers" f >>= readImpl) <|> (pure Nothing)
+    _allowEmptyValue <- (readProp "allowEmptyValue" f >>= readImpl) <|> (pure Nothing)
+    _style <- (readProp "style" f >>= readImpl) <|> (pure Nothing)
+    _explode <- (readProp "explode" f >>= readImpl) <|> (pure Nothing)
+    _allowReserved <- (readProp "allowReserved" f >>= readImpl) <|> (pure Nothing)
+    _schema <- (readProp "schema" f >>= readImpl) <|> (pure Nothing)
     _content <- (readProp "content" f >>= readImpl) <|> (pure Nothing)
-    _links <- (readProp "links" f >>= readImpl) <|> (pure Nothing)
+    _example <- (readProp "example" f >>= readImpl) <|> (pure Nothing)
+    _examples <- (readProp "examples" f >>= readImpl) <|> (pure Nothing)
     _x <- xify f
-    pure $ Response { _description, _headers, _content, _links, _x }
+    pure $ Parameter { _name, _in, _description, _required, _deprecated, _allowEmptyValue, _style, _explode, _allowReserved, _schema, _content, _example, _examples, _x }
 
-_Response ∷
+_Parameter ∷
   Tuple
-    ( T_Response → Response
+    ( T_Parameter → Parameter
     )
-    ( Response →
-      Maybe T_Response
+    ( Parameter →
+      Maybe T_Parameter
     )
-_Response =
-  Tuple Response
+_Parameter =
+  Tuple Parameter
     ( case _ of
-        Response a → Just a
-    )
-
--- |Link
-type T_Link
-  = { _operationId :: (Maybe String), _operationRef :: (Maybe String), _parameters :: (Maybe ((OAIMap JSON))), _requestBody :: (Maybe JSON), _description :: (Maybe String), _server :: (Maybe Server), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype Link
-  = Link T_Link
-
-instance eqLink :: Eq Link where
-  eq (Link f0) (Link f1) = (f0._operationId == f1._operationId) && (f0._operationRef == f1._operationRef) && (f0._parameters == f1._parameters) && (f0._requestBody == f1._requestBody) && (f0._description == f1._description) && (f0._server == f1._server) && (f0._x == f1._x)
-
-instance writeForeignLink :: WriteForeign Link where
-  writeImpl (Link f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "operationId" (writeImpl x) ]) f._operationId) <> (maybe [] (\x -> [ Tuple "operationRef" (writeImpl x) ]) f._operationRef) <> (maybe [] (\x -> [ Tuple "parameters" (writeImpl x) ]) f._parameters) <> (maybe [] (\x -> [ Tuple "requestBody" (writeImpl x) ]) f._requestBody) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "server" (writeImpl x) ]) f._server) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignLink :: ReadForeign Link where
-  readImpl f = do
-    _operationId <- (readProp "operationId" f >>= readImpl) <|> (pure Nothing)
-    _operationRef <- (readProp "operationRef" f >>= readImpl) <|> (pure Nothing)
-    _parameters <- (readProp "parameters" f >>= readImpl) <|> (pure Nothing)
-    _requestBody <- (readProp "requestBody" f >>= readImpl) <|> (pure Nothing)
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _server <- (readProp "server" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ Link { _operationId, _operationRef, _parameters, _requestBody, _description, _server, _x }
-
-_Link ∷
-  Tuple
-    ( T_Link → Link
-    )
-    ( Link →
-      Maybe T_Link
-    )
-_Link =
-  Tuple Link
-    ( case _ of
-        Link a → Just a
+        Parameter a → Just a
     )
 
 -- |Contact
@@ -698,8 +656,12 @@ type T_Contact
 newtype Contact
   = Contact T_Contact
 
-instance eqContact :: Eq Contact where
-  eq (Contact f0) (Contact f1) = (f0._name == f1._name) && (f0._url == f1._url) && (f0._email == f1._email) && (f0._x == f1._x)
+derive instance eqContact :: Eq Contact
+
+derive instance genericContact :: Generic Contact _
+
+instance showContact :: Show Contact where
+  show s = genericShow s
 
 instance writeForeignContact :: WriteForeign Contact where
   writeImpl (Contact f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "name" (writeImpl x) ]) f._name) <> (maybe [] (\x -> [ Tuple "url" (writeImpl x) ]) f._url) <> (maybe [] (\x -> [ Tuple "email" (writeImpl x) ]) f._email) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -725,116 +687,6 @@ _Contact =
         Contact a → Just a
     )
 
--- |RequestBody
-type T_RequestBody
-  = { _content :: ((OAIMap MediaType)), _description :: (Maybe String), _required :: (Maybe Boolean), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype RequestBody
-  = RequestBody T_RequestBody
-
-instance eqRequestBody :: Eq RequestBody where
-  eq (RequestBody f0) (RequestBody f1) = (f0._content == f1._content) && (f0._description == f1._description) && (f0._required == f1._required) && (f0._x == f1._x)
-
-instance writeForeignRequestBody :: WriteForeign RequestBody where
-  writeImpl (RequestBody f) = writeImpl $ FO.fromFoldable ([ Tuple "content" (writeImpl f._content) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignRequestBody :: ReadForeign RequestBody where
-  readImpl f = do
-    _content <- readProp "content" f >>= readImpl
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _required <- (readProp "required" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ RequestBody { _content, _description, _required, _x }
-
-_RequestBody ∷
-  Tuple
-    ( T_RequestBody → RequestBody
-    )
-    ( RequestBody →
-      Maybe T_RequestBody
-    )
-_RequestBody =
-  Tuple RequestBody
-    ( case _ of
-        RequestBody a → Just a
-    )
-
--- |License
-type T_License
-  = { _name :: String, _url :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype License
-  = License T_License
-
-instance eqLicense :: Eq License where
-  eq (License f0) (License f1) = (f0._name == f1._name) && (f0._url == f1._url) && (f0._x == f1._x)
-
-instance writeForeignLicense :: WriteForeign License where
-  writeImpl (License f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> (maybe [] (\x -> [ Tuple "url" (writeImpl x) ]) f._url) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignLicense :: ReadForeign License where
-  readImpl f = do
-    _name <- readProp "name" f >>= readImpl
-    _url <- (readProp "url" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ License { _name, _url, _x }
-
-_License ∷
-  Tuple
-    ( T_License → License
-    )
-    ( License →
-      Maybe T_License
-    )
-_License =
-  Tuple License
-    ( case _ of
-        License a → Just a
-    )
-
--- |Operation
-type T_Operation
-  = { _responses :: ((OAIMap ((ReferenceOr Response)))), _tags :: (Maybe ((Array String))), _summary :: (Maybe String), _description :: (Maybe String), _externalDocs :: (Maybe ExternalDocumentation), _operationId :: (Maybe String), _parameters :: (Maybe ((Array (ReferenceOr Parameter)))), _requestBody :: (Maybe (ReferenceOr RequestBody)), _callbacks :: (Maybe ((OAIMap ((ReferenceOr ((OAIMap PathItem))))))), _deprecated :: (Maybe Boolean), _security :: (Maybe ((Array (OAIMap ((Array String)))))), _servers :: (Maybe ((Array Server))), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype Operation
-  = Operation T_Operation
-
-instance eqOperation :: Eq Operation where
-  eq (Operation f0) (Operation f1) = (f0._responses == f1._responses) && (f0._tags == f1._tags) && (f0._summary == f1._summary) && (f0._description == f1._description) && (f0._externalDocs == f1._externalDocs) && (f0._operationId == f1._operationId) && (f0._parameters == f1._parameters) && (f0._requestBody == f1._requestBody) && (f0._callbacks == f1._callbacks) && (f0._deprecated == f1._deprecated) && (f0._security == f1._security) && (f0._servers == f1._servers) && (f0._x == f1._x)
-
-instance writeForeignOperation :: WriteForeign Operation where
-  writeImpl (Operation f) = writeImpl $ FO.fromFoldable ([ Tuple "responses" (writeImpl f._responses) ] <> (maybe [] (\x -> [ Tuple "tags" (writeImpl x) ]) f._tags) <> (maybe [] (\x -> [ Tuple "summary" (writeImpl x) ]) f._summary) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "externalDocs" (writeImpl x) ]) f._externalDocs) <> (maybe [] (\x -> [ Tuple "operationId" (writeImpl x) ]) f._operationId) <> (maybe [] (\x -> [ Tuple "parameters" (writeImpl x) ]) f._parameters) <> (maybe [] (\x -> [ Tuple "requestBody" (writeImpl x) ]) f._requestBody) <> (maybe [] (\x -> [ Tuple "callbacks" (writeImpl x) ]) f._callbacks) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "security" (writeImpl x) ]) f._security) <> (maybe [] (\x -> [ Tuple "servers" (writeImpl x) ]) f._servers) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignOperation :: ReadForeign Operation where
-  readImpl f = do
-    _responses <- readProp "responses" f >>= readImpl
-    _tags <- (readProp "tags" f >>= readImpl) <|> (pure Nothing)
-    _summary <- (readProp "summary" f >>= readImpl) <|> (pure Nothing)
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _externalDocs <- (readProp "externalDocs" f >>= readImpl) <|> (pure Nothing)
-    _operationId <- (readProp "operationId" f >>= readImpl) <|> (pure Nothing)
-    _parameters <- (readProp "parameters" f >>= readImpl) <|> (pure Nothing)
-    _requestBody <- (readProp "requestBody" f >>= readImpl) <|> (pure Nothing)
-    _callbacks <- (readProp "callbacks" f >>= readImpl) <|> (pure Nothing)
-    _deprecated <- (readProp "deprecated" f >>= readImpl) <|> (pure Nothing)
-    _security <- (readProp "security" f >>= readImpl) <|> (pure Nothing)
-    _servers <- (readProp "servers" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ Operation { _responses, _tags, _summary, _description, _externalDocs, _operationId, _parameters, _requestBody, _callbacks, _deprecated, _security, _servers, _x }
-
-_Operation ∷
-  Tuple
-    ( T_Operation → Operation
-    )
-    ( Operation →
-      Maybe T_Operation
-    )
-_Operation =
-  Tuple Operation
-    ( case _ of
-        Operation a → Just a
-    )
-
 data SecuritySchema
   = APIKeySS APIKeySecurityScheme
   | HTTPSS HTTPSecurityScheme
@@ -844,6 +696,9 @@ data SecuritySchema
   | ReferenceSS Reference
 
 derive instance genericSecuritySchema :: Generic SecuritySchema _
+
+instance showSecuritySchema :: Show SecuritySchema where
+  show = genericShow
 
 instance eqSecuritySchema :: Eq SecuritySchema where
   eq = genericEq
@@ -956,40 +811,6 @@ _ReferenceSS =
         _ → Nothing
     )
 
--- |ServerVariable
-type T_ServerVariable
-  = { _default :: String, _enum :: (Maybe ((Array String))), _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype ServerVariable
-  = ServerVariable T_ServerVariable
-
-instance eqServerVariable :: Eq ServerVariable where
-  eq (ServerVariable f0) (ServerVariable f1) = (f0._default == f1._default) && (f0._enum == f1._enum) && (f0._description == f1._description) && (f0._x == f1._x)
-
-instance writeForeignServerVariable :: WriteForeign ServerVariable where
-  writeImpl (ServerVariable f) = writeImpl $ FO.fromFoldable ([ Tuple "default" (writeImpl f._default) ] <> (maybe [] (\x -> [ Tuple "enum" (writeImpl x) ]) f._enum) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignServerVariable :: ReadForeign ServerVariable where
-  readImpl f = do
-    _default <- readProp "default" f >>= readImpl
-    _enum <- (readProp "enum" f >>= readImpl) <|> (pure Nothing)
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ ServerVariable { _default, _enum, _description, _x }
-
-_ServerVariable ∷
-  Tuple
-    ( T_ServerVariable → ServerVariable
-    )
-    ( ServerVariable →
-      Maybe T_ServerVariable
-    )
-_ServerVariable =
-  Tuple ServerVariable
-    ( case _ of
-        ServerVariable a → Just a
-    )
-
 -- |Example
 type T_Example
   = { _summary :: (Maybe String), _description :: (Maybe String), _value :: (Maybe JSON), _externalValue :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
@@ -997,8 +818,12 @@ type T_Example
 newtype Example
   = Example T_Example
 
-instance eqExample :: Eq Example where
-  eq (Example f0) (Example f1) = (f0._summary == f1._summary) && (f0._description == f1._description) && (f0._value == f1._value) && (f0._externalValue == f1._externalValue) && (f0._x == f1._x)
+derive instance eqExample :: Eq Example
+
+derive instance genericExample :: Generic Example _
+
+instance showExample :: Show Example where
+  show s = genericShow s
 
 instance writeForeignExample :: WriteForeign Example where
   writeImpl (Example f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "summary" (writeImpl x) ]) f._summary) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "value" (writeImpl x) ]) f._value) <> (maybe [] (\x -> [ Tuple "externalValue" (writeImpl x) ]) f._externalValue) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1025,48 +850,314 @@ _Example =
         Example a → Just a
     )
 
--- |Parameter
-type T_Parameter
-  = { _name :: String, _in :: String, _description :: (Maybe String), _required :: (Maybe Boolean), _deprecated :: (Maybe Boolean), _allowEmptyValue :: (Maybe Boolean), _style :: (Maybe String), _explode :: (Maybe Boolean), _allowReserved :: (Maybe Boolean), _schema :: (Maybe (ReferenceOr Schema)), _content :: (Maybe ((OAIMap MediaType))), _example :: (Maybe JSON), _examples :: (Maybe ((OAIMap ((ReferenceOr Example))))), _x :: (Maybe ((OAIMap JSON))) }
+-- |ServerVariable
+type T_ServerVariable
+  = { _default :: String, _enum :: (Maybe ((Array String))), _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
 
-newtype Parameter
-  = Parameter T_Parameter
+newtype ServerVariable
+  = ServerVariable T_ServerVariable
 
-instance eqParameter :: Eq Parameter where
-  eq (Parameter f0) (Parameter f1) = (f0._name == f1._name) && (f0._in == f1._in) && (f0._description == f1._description) && (f0._required == f1._required) && (f0._deprecated == f1._deprecated) && (f0._allowEmptyValue == f1._allowEmptyValue) && (f0._style == f1._style) && (f0._explode == f1._explode) && (f0._allowReserved == f1._allowReserved) && (f0._schema == f1._schema) && (f0._content == f1._content) && (f0._example == f1._example) && (f0._examples == f1._examples) && (f0._x == f1._x)
+derive instance eqServerVariable :: Eq ServerVariable
 
-instance writeForeignParameter :: WriteForeign Parameter where
-  writeImpl (Parameter f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> [ Tuple "in" (writeImpl f._in) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "allowEmptyValue" (writeImpl x) ]) f._allowEmptyValue) <> (maybe [] (\x -> [ Tuple "style" (writeImpl x) ]) f._style) <> (maybe [] (\x -> [ Tuple "explode" (writeImpl x) ]) f._explode) <> (maybe [] (\x -> [ Tuple "allowReserved" (writeImpl x) ]) f._allowReserved) <> (maybe [] (\x -> [ Tuple "schema" (writeImpl x) ]) f._schema) <> (maybe [] (\x -> [ Tuple "content" (writeImpl x) ]) f._content) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "examples" (writeImpl x) ]) f._examples) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+derive instance genericServerVariable :: Generic ServerVariable _
 
-instance readForeignParameter :: ReadForeign Parameter where
+instance showServerVariable :: Show ServerVariable where
+  show s = genericShow s
+
+instance writeForeignServerVariable :: WriteForeign ServerVariable where
+  writeImpl (ServerVariable f) = writeImpl $ FO.fromFoldable ([ Tuple "default" (writeImpl f._default) ] <> (maybe [] (\x -> [ Tuple "enum" (writeImpl x) ]) f._enum) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignServerVariable :: ReadForeign ServerVariable where
+  readImpl f = do
+    _default <- readProp "default" f >>= readImpl
+    _enum <- (readProp "enum" f >>= readImpl) <|> (pure Nothing)
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ ServerVariable { _default, _enum, _description, _x }
+
+_ServerVariable ∷
+  Tuple
+    ( T_ServerVariable → ServerVariable
+    )
+    ( ServerVariable →
+      Maybe T_ServerVariable
+    )
+_ServerVariable =
+  Tuple ServerVariable
+    ( case _ of
+        ServerVariable a → Just a
+    )
+
+-- |Response
+type T_Response
+  = { _description :: String, _headers :: (Maybe ((OAIMap ((ReferenceOr Header))))), _content :: (Maybe ((OAIMap MediaType))), _links :: (Maybe ((OAIMap ((ReferenceOr Link))))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Response
+  = Response T_Response
+
+derive instance eqResponse :: Eq Response
+
+derive instance genericResponse :: Generic Response _
+
+instance showResponse :: Show Response where
+  show s = genericShow s
+
+instance writeForeignResponse :: WriteForeign Response where
+  writeImpl (Response f) = writeImpl $ FO.fromFoldable ([ Tuple "description" (writeImpl f._description) ] <> (maybe [] (\x -> [ Tuple "headers" (writeImpl x) ]) f._headers) <> (maybe [] (\x -> [ Tuple "content" (writeImpl x) ]) f._content) <> (maybe [] (\x -> [ Tuple "links" (writeImpl x) ]) f._links) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignResponse :: ReadForeign Response where
+  readImpl f = do
+    _description <- readProp "description" f >>= readImpl
+    _headers <- (readProp "headers" f >>= readImpl) <|> (pure Nothing)
+    _content <- (readProp "content" f >>= readImpl) <|> (pure Nothing)
+    _links <- (readProp "links" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Response { _description, _headers, _content, _links, _x }
+
+_Response ∷
+  Tuple
+    ( T_Response → Response
+    )
+    ( Response →
+      Maybe T_Response
+    )
+_Response =
+  Tuple Response
+    ( case _ of
+        Response a → Just a
+    )
+
+-- |Schema
+type T_Schema
+  = { _title :: (Maybe String), _multipleOf :: (Maybe Number), _maximum :: (Maybe Number), _exclusiveMaximum :: (Maybe BooleanInt), _minimum :: (Maybe Number), _exclusiveMinimum :: (Maybe BooleanInt), _maxLength :: (Maybe Int), _minLength :: (Maybe Int), _pattern :: (Maybe String), _maxItems :: (Maybe Int), _minItems :: (Maybe Int), _uniqueItems :: (Maybe Boolean), _maxProperties :: (Maybe Int), _minProperties :: (Maybe Int), _required :: (Maybe ((Array String))), _enum :: (Maybe ((Array JSON))), _allOf :: (Maybe ((Array (ReferenceOr Schema)))), _oneOf :: (Maybe ((Array (ReferenceOr Schema)))), _anyOf :: (Maybe ((Array (ReferenceOr Schema)))), _items :: (Maybe Items), _properties :: (Maybe ((OAIMap ((ReferenceOr Schema))))), _additionalProperties :: (Maybe Additionals), _description :: (Maybe String), _default :: (Maybe JSON), _nullable :: (Maybe Boolean), _discriminator :: (Maybe Discriminator), _readOnly :: (Maybe Boolean), _writeOnly :: (Maybe Boolean), _example :: (Maybe JSON), _externalDocs :: (Maybe ExternalDocumentation), _deprecated :: (Maybe Boolean), _xml :: (Maybe XML), _format :: (Maybe String), _type :: (Maybe String), _not :: (Maybe (ReferenceOr Schema)), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Schema
+  = Schema T_Schema
+
+derive instance eqSchema :: Eq Schema
+
+derive instance genericSchema :: Generic Schema _
+
+instance showSchema :: Show Schema where
+  show s = genericShow s
+
+instance writeForeignSchema :: WriteForeign Schema where
+  writeImpl (Schema f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "title" (writeImpl x) ]) f._title) <> (maybe [] (\x -> [ Tuple "multipleOf" (writeImpl x) ]) f._multipleOf) <> (maybe [] (\x -> [ Tuple "maximum" (writeImpl x) ]) f._maximum) <> (maybe [] (\x -> [ Tuple "exclusiveMaximum" (writeImpl x) ]) f._exclusiveMaximum) <> (maybe [] (\x -> [ Tuple "minimum" (writeImpl x) ]) f._minimum) <> (maybe [] (\x -> [ Tuple "exclusiveMinimum" (writeImpl x) ]) f._exclusiveMinimum) <> (maybe [] (\x -> [ Tuple "maxLength" (writeImpl x) ]) f._maxLength) <> (maybe [] (\x -> [ Tuple "minLength" (writeImpl x) ]) f._minLength) <> (maybe [] (\x -> [ Tuple "pattern" (writeImpl x) ]) f._pattern) <> (maybe [] (\x -> [ Tuple "maxItems" (writeImpl x) ]) f._maxItems) <> (maybe [] (\x -> [ Tuple "minItems" (writeImpl x) ]) f._minItems) <> (maybe [] (\x -> [ Tuple "uniqueItems" (writeImpl x) ]) f._uniqueItems) <> (maybe [] (\x -> [ Tuple "maxProperties" (writeImpl x) ]) f._maxProperties) <> (maybe [] (\x -> [ Tuple "minProperties" (writeImpl x) ]) f._minProperties) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\x -> [ Tuple "enum" (writeImpl x) ]) f._enum) <> (maybe [] (\x -> [ Tuple "allOf" (writeImpl x) ]) f._allOf) <> (maybe [] (\x -> [ Tuple "oneOf" (writeImpl x) ]) f._oneOf) <> (maybe [] (\x -> [ Tuple "anyOf" (writeImpl x) ]) f._anyOf) <> (maybe [] (\x -> [ Tuple "items" (writeImpl x) ]) f._items) <> (maybe [] (\x -> [ Tuple "properties" (writeImpl x) ]) f._properties) <> (maybe [] (\x -> [ Tuple "additionalProperties" (writeImpl x) ]) f._additionalProperties) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "default" (writeImpl x) ]) f._default) <> (maybe [] (\x -> [ Tuple "nullable" (writeImpl x) ]) f._nullable) <> (maybe [] (\x -> [ Tuple "discriminator" (writeImpl x) ]) f._discriminator) <> (maybe [] (\x -> [ Tuple "readOnly" (writeImpl x) ]) f._readOnly) <> (maybe [] (\x -> [ Tuple "writeOnly" (writeImpl x) ]) f._writeOnly) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "externalDocs" (writeImpl x) ]) f._externalDocs) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "xml" (writeImpl x) ]) f._xml) <> (maybe [] (\x -> [ Tuple "format" (writeImpl x) ]) f._format) <> (maybe [] (\x -> [ Tuple "type" (writeImpl x) ]) f._type) <> (maybe [] (\x -> [ Tuple "not" (writeImpl x) ]) f._not) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignSchema :: ReadForeign Schema where
+  readImpl f = do
+    _title <- (readProp "title" f >>= readImpl) <|> (pure Nothing)
+    _multipleOf <- (readProp "multipleOf" f >>= readImpl) <|> (pure Nothing)
+    _maximum <- (readProp "maximum" f >>= readImpl) <|> (pure Nothing)
+    _exclusiveMaximum <- (readProp "exclusiveMaximum" f >>= readImpl) <|> (pure Nothing)
+    _minimum <- (readProp "minimum" f >>= readImpl) <|> (pure Nothing)
+    _exclusiveMinimum <- (readProp "exclusiveMinimum" f >>= readImpl) <|> (pure Nothing)
+    _maxLength <- (readProp "maxLength" f >>= readImpl) <|> (pure Nothing)
+    _minLength <- (readProp "minLength" f >>= readImpl) <|> (pure Nothing)
+    _pattern <- (readProp "pattern" f >>= readImpl) <|> (pure Nothing)
+    _maxItems <- (readProp "maxItems" f >>= readImpl) <|> (pure Nothing)
+    _minItems <- (readProp "minItems" f >>= readImpl) <|> (pure Nothing)
+    _uniqueItems <- (readProp "uniqueItems" f >>= readImpl) <|> (pure Nothing)
+    _maxProperties <- (readProp "maxProperties" f >>= readImpl) <|> (pure Nothing)
+    _minProperties <- (readProp "minProperties" f >>= readImpl) <|> (pure Nothing)
+    _required <- (readProp "required" f >>= readImpl) <|> (pure Nothing)
+    _enum <- (readProp "enum" f >>= readImpl) <|> (pure Nothing)
+    _allOf <- (readProp "allOf" f >>= readImpl) <|> (pure Nothing)
+    _oneOf <- (readProp "oneOf" f >>= readImpl) <|> (pure Nothing)
+    _anyOf <- (readProp "anyOf" f >>= readImpl) <|> (pure Nothing)
+    _items <- (readProp "items" f >>= readImpl) <|> (pure Nothing)
+    _properties <- (readProp "properties" f >>= readImpl) <|> (pure Nothing)
+    _additionalProperties <- (readProp "additionalProperties" f >>= readImpl) <|> (pure Nothing)
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _default <- (readProp "default" f >>= readImpl) <|> (pure Nothing)
+    _nullable <- (readProp "nullable" f >>= readImpl) <|> (pure Nothing)
+    _discriminator <- (readProp "discriminator" f >>= readImpl) <|> (pure Nothing)
+    _readOnly <- (readProp "readOnly" f >>= readImpl) <|> (pure Nothing)
+    _writeOnly <- (readProp "writeOnly" f >>= readImpl) <|> (pure Nothing)
+    _example <- (readProp "example" f >>= readImpl) <|> (pure Nothing)
+    _externalDocs <- (readProp "externalDocs" f >>= readImpl) <|> (pure Nothing)
+    _deprecated <- (readProp "deprecated" f >>= readImpl) <|> (pure Nothing)
+    _xml <- (readProp "xml" f >>= readImpl) <|> (pure Nothing)
+    _format <- (readProp "format" f >>= readImpl) <|> (pure Nothing)
+    _type <- (readProp "type" f >>= readImpl) <|> (pure Nothing)
+    _not <- (readProp "not" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Schema { _title, _multipleOf, _maximum, _exclusiveMaximum, _minimum, _exclusiveMinimum, _maxLength, _minLength, _pattern, _maxItems, _minItems, _uniqueItems, _maxProperties, _minProperties, _required, _enum, _allOf, _oneOf, _anyOf, _items, _properties, _additionalProperties, _description, _default, _nullable, _discriminator, _readOnly, _writeOnly, _example, _externalDocs, _deprecated, _xml, _format, _type, _not, _x }
+
+_Schema ∷
+  Tuple
+    ( T_Schema → Schema
+    )
+    ( Schema →
+      Maybe T_Schema
+    )
+_Schema =
+  Tuple Schema
+    ( case _ of
+        Schema a → Just a
+    )
+
+-- |License
+type T_License
+  = { _name :: String, _url :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype License
+  = License T_License
+
+derive instance eqLicense :: Eq License
+
+derive instance genericLicense :: Generic License _
+
+instance showLicense :: Show License where
+  show s = genericShow s
+
+instance writeForeignLicense :: WriteForeign License where
+  writeImpl (License f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> (maybe [] (\x -> [ Tuple "url" (writeImpl x) ]) f._url) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignLicense :: ReadForeign License where
   readImpl f = do
     _name <- readProp "name" f >>= readImpl
-    _in <- readProp "in" f >>= readImpl
+    _url <- (readProp "url" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ License { _name, _url, _x }
+
+_License ∷
+  Tuple
+    ( T_License → License
+    )
+    ( License →
+      Maybe T_License
+    )
+_License =
+  Tuple License
+    ( case _ of
+        License a → Just a
+    )
+
+-- |Operation
+type T_Operation
+  = { _responses :: ((OAIMap ((ReferenceOr Response)))), _tags :: (Maybe ((Array String))), _summary :: (Maybe String), _description :: (Maybe String), _externalDocs :: (Maybe ExternalDocumentation), _operationId :: (Maybe String), _parameters :: (Maybe ((Array (ReferenceOr Parameter)))), _requestBody :: (Maybe (ReferenceOr RequestBody)), _callbacks :: (Maybe ((OAIMap ((ReferenceOr ((OAIMap PathItem))))))), _deprecated :: (Maybe Boolean), _security :: (Maybe ((Array (OAIMap ((Array String)))))), _servers :: (Maybe ((Array Server))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Operation
+  = Operation T_Operation
+
+derive instance eqOperation :: Eq Operation
+
+derive instance genericOperation :: Generic Operation _
+
+instance showOperation :: Show Operation where
+  show s = genericShow s
+
+instance writeForeignOperation :: WriteForeign Operation where
+  writeImpl (Operation f) = writeImpl $ FO.fromFoldable ([ Tuple "responses" (writeImpl f._responses) ] <> (maybe [] (\x -> [ Tuple "tags" (writeImpl x) ]) f._tags) <> (maybe [] (\x -> [ Tuple "summary" (writeImpl x) ]) f._summary) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "externalDocs" (writeImpl x) ]) f._externalDocs) <> (maybe [] (\x -> [ Tuple "operationId" (writeImpl x) ]) f._operationId) <> (maybe [] (\x -> [ Tuple "parameters" (writeImpl x) ]) f._parameters) <> (maybe [] (\x -> [ Tuple "requestBody" (writeImpl x) ]) f._requestBody) <> (maybe [] (\x -> [ Tuple "callbacks" (writeImpl x) ]) f._callbacks) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "security" (writeImpl x) ]) f._security) <> (maybe [] (\x -> [ Tuple "servers" (writeImpl x) ]) f._servers) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignOperation :: ReadForeign Operation where
+  readImpl f = do
+    _responses <- readProp "responses" f >>= readImpl
+    _tags <- (readProp "tags" f >>= readImpl) <|> (pure Nothing)
+    _summary <- (readProp "summary" f >>= readImpl) <|> (pure Nothing)
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _externalDocs <- (readProp "externalDocs" f >>= readImpl) <|> (pure Nothing)
+    _operationId <- (readProp "operationId" f >>= readImpl) <|> (pure Nothing)
+    _parameters <- (readProp "parameters" f >>= readImpl) <|> (pure Nothing)
+    _requestBody <- (readProp "requestBody" f >>= readImpl) <|> (pure Nothing)
+    _callbacks <- (readProp "callbacks" f >>= readImpl) <|> (pure Nothing)
+    _deprecated <- (readProp "deprecated" f >>= readImpl) <|> (pure Nothing)
+    _security <- (readProp "security" f >>= readImpl) <|> (pure Nothing)
+    _servers <- (readProp "servers" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Operation { _responses, _tags, _summary, _description, _externalDocs, _operationId, _parameters, _requestBody, _callbacks, _deprecated, _security, _servers, _x }
+
+_Operation ∷
+  Tuple
+    ( T_Operation → Operation
+    )
+    ( Operation →
+      Maybe T_Operation
+    )
+_Operation =
+  Tuple Operation
+    ( case _ of
+        Operation a → Just a
+    )
+
+-- |Link
+type T_Link
+  = { _operationId :: (Maybe String), _operationRef :: (Maybe String), _parameters :: (Maybe ((OAIMap JSON))), _requestBody :: (Maybe JSON), _description :: (Maybe String), _server :: (Maybe Server), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Link
+  = Link T_Link
+
+derive instance eqLink :: Eq Link
+
+derive instance genericLink :: Generic Link _
+
+instance showLink :: Show Link where
+  show s = genericShow s
+
+instance writeForeignLink :: WriteForeign Link where
+  writeImpl (Link f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "operationId" (writeImpl x) ]) f._operationId) <> (maybe [] (\x -> [ Tuple "operationRef" (writeImpl x) ]) f._operationRef) <> (maybe [] (\x -> [ Tuple "parameters" (writeImpl x) ]) f._parameters) <> (maybe [] (\x -> [ Tuple "requestBody" (writeImpl x) ]) f._requestBody) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "server" (writeImpl x) ]) f._server) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignLink :: ReadForeign Link where
+  readImpl f = do
+    _operationId <- (readProp "operationId" f >>= readImpl) <|> (pure Nothing)
+    _operationRef <- (readProp "operationRef" f >>= readImpl) <|> (pure Nothing)
+    _parameters <- (readProp "parameters" f >>= readImpl) <|> (pure Nothing)
+    _requestBody <- (readProp "requestBody" f >>= readImpl) <|> (pure Nothing)
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _server <- (readProp "server" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Link { _operationId, _operationRef, _parameters, _requestBody, _description, _server, _x }
+
+_Link ∷
+  Tuple
+    ( T_Link → Link
+    )
+    ( Link →
+      Maybe T_Link
+    )
+_Link =
+  Tuple Link
+    ( case _ of
+        Link a → Just a
+    )
+
+-- |RequestBody
+type T_RequestBody
+  = { _content :: ((OAIMap MediaType)), _description :: (Maybe String), _required :: (Maybe Boolean), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype RequestBody
+  = RequestBody T_RequestBody
+
+derive instance eqRequestBody :: Eq RequestBody
+
+derive instance genericRequestBody :: Generic RequestBody _
+
+instance showRequestBody :: Show RequestBody where
+  show s = genericShow s
+
+instance writeForeignRequestBody :: WriteForeign RequestBody where
+  writeImpl (RequestBody f) = writeImpl $ FO.fromFoldable ([ Tuple "content" (writeImpl f._content) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignRequestBody :: ReadForeign RequestBody where
+  readImpl f = do
+    _content <- readProp "content" f >>= readImpl
     _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
     _required <- (readProp "required" f >>= readImpl) <|> (pure Nothing)
-    _deprecated <- (readProp "deprecated" f >>= readImpl) <|> (pure Nothing)
-    _allowEmptyValue <- (readProp "allowEmptyValue" f >>= readImpl) <|> (pure Nothing)
-    _style <- (readProp "style" f >>= readImpl) <|> (pure Nothing)
-    _explode <- (readProp "explode" f >>= readImpl) <|> (pure Nothing)
-    _allowReserved <- (readProp "allowReserved" f >>= readImpl) <|> (pure Nothing)
-    _schema <- (readProp "schema" f >>= readImpl) <|> (pure Nothing)
-    _content <- (readProp "content" f >>= readImpl) <|> (pure Nothing)
-    _example <- (readProp "example" f >>= readImpl) <|> (pure Nothing)
-    _examples <- (readProp "examples" f >>= readImpl) <|> (pure Nothing)
     _x <- xify f
-    pure $ Parameter { _name, _in, _description, _required, _deprecated, _allowEmptyValue, _style, _explode, _allowReserved, _schema, _content, _example, _examples, _x }
+    pure $ RequestBody { _content, _description, _required, _x }
 
-_Parameter ∷
+_RequestBody ∷
   Tuple
-    ( T_Parameter → Parameter
+    ( T_RequestBody → RequestBody
     )
-    ( Parameter →
-      Maybe T_Parameter
+    ( RequestBody →
+      Maybe T_RequestBody
     )
-_Parameter =
-  Tuple Parameter
+_RequestBody =
+  Tuple RequestBody
     ( case _ of
-        Parameter a → Just a
+        RequestBody a → Just a
     )
 
 -- |Header
@@ -1076,8 +1167,12 @@ type T_Header
 newtype Header
   = Header T_Header
 
-instance eqHeader :: Eq Header where
-  eq (Header f0) (Header f1) = (f0._description == f1._description) && (f0._required == f1._required) && (f0._deprecated == f1._deprecated) && (f0._allowEmptyValue == f1._allowEmptyValue) && (f0._style == f1._style) && (f0._explode == f1._explode) && (f0._allowReserved == f1._allowReserved) && (f0._schema == f1._schema) && (f0._content == f1._content) && (f0._example == f1._example) && (f0._examples == f1._examples) && (f0._x == f1._x)
+derive instance eqHeader :: Eq Header
+
+derive instance genericHeader :: Generic Header _
+
+instance showHeader :: Show Header where
+  show s = genericShow s
 
 instance writeForeignHeader :: WriteForeign Header where
   writeImpl (Header f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\x -> [ Tuple "required" (writeImpl x) ]) f._required) <> (maybe [] (\x -> [ Tuple "deprecated" (writeImpl x) ]) f._deprecated) <> (maybe [] (\x -> [ Tuple "allowEmptyValue" (writeImpl x) ]) f._allowEmptyValue) <> (maybe [] (\x -> [ Tuple "style" (writeImpl x) ]) f._style) <> (maybe [] (\x -> [ Tuple "explode" (writeImpl x) ]) f._explode) <> (maybe [] (\x -> [ Tuple "allowReserved" (writeImpl x) ]) f._allowReserved) <> (maybe [] (\x -> [ Tuple "schema" (writeImpl x) ]) f._schema) <> (maybe [] (\x -> [ Tuple "content" (writeImpl x) ]) f._content) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "examples" (writeImpl x) ]) f._examples) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1111,6 +1206,120 @@ _Header =
         Header a → Just a
     )
 
+-- |OAuth2SecurityScheme
+type T_OAuth2SecurityScheme
+  = { _flows :: OAuthFlows, _type :: String, _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype OAuth2SecurityScheme
+  = OAuth2SecurityScheme T_OAuth2SecurityScheme
+
+derive instance eqOAuth2SecurityScheme :: Eq OAuth2SecurityScheme
+
+derive instance genericOAuth2SecurityScheme :: Generic OAuth2SecurityScheme _
+
+instance showOAuth2SecurityScheme :: Show OAuth2SecurityScheme where
+  show s = genericShow s
+
+instance writeForeignOAuth2SecurityScheme :: WriteForeign OAuth2SecurityScheme where
+  writeImpl (OAuth2SecurityScheme f) = writeImpl $ FO.fromFoldable ([ Tuple "flows" (writeImpl f._flows) ] <> [ Tuple "type" (writeImpl f._type) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignOAuth2SecurityScheme :: ReadForeign OAuth2SecurityScheme where
+  readImpl f = do
+    _flows <- readProp "flows" f >>= readImpl
+    _type <- readProp "type" f >>= readImpl
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ OAuth2SecurityScheme { _flows, _type, _description, _x }
+
+_OAuth2SecurityScheme ∷
+  Tuple
+    ( T_OAuth2SecurityScheme → OAuth2SecurityScheme
+    )
+    ( OAuth2SecurityScheme →
+      Maybe T_OAuth2SecurityScheme
+    )
+_OAuth2SecurityScheme =
+  Tuple OAuth2SecurityScheme
+    ( case _ of
+        OAuth2SecurityScheme a → Just a
+    )
+
+-- |Discriminator
+type T_Discriminator
+  = { _propertyName :: String, _mapping :: (Maybe ((OAIMap String))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Discriminator
+  = Discriminator T_Discriminator
+
+derive instance eqDiscriminator :: Eq Discriminator
+
+derive instance genericDiscriminator :: Generic Discriminator _
+
+instance showDiscriminator :: Show Discriminator where
+  show s = genericShow s
+
+instance writeForeignDiscriminator :: WriteForeign Discriminator where
+  writeImpl (Discriminator f) = writeImpl $ FO.fromFoldable ([ Tuple "propertyName" (writeImpl f._propertyName) ] <> (maybe [] (\x -> [ Tuple "mapping" (writeImpl x) ]) f._mapping) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignDiscriminator :: ReadForeign Discriminator where
+  readImpl f = do
+    _propertyName <- readProp "propertyName" f >>= readImpl
+    _mapping <- (readProp "mapping" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ Discriminator { _propertyName, _mapping, _x }
+
+_Discriminator ∷
+  Tuple
+    ( T_Discriminator → Discriminator
+    )
+    ( Discriminator →
+      Maybe T_Discriminator
+    )
+_Discriminator =
+  Tuple Discriminator
+    ( case _ of
+        Discriminator a → Just a
+    )
+
+-- |MediaType
+type T_MediaType
+  = { _schema :: (Maybe (ReferenceOr Schema)), _example :: (Maybe JSON), _examples :: (Maybe ((OAIMap ((ReferenceOr Example))))), _encoding :: (Maybe ((OAIMap Encoding))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype MediaType
+  = MediaType T_MediaType
+
+derive instance eqMediaType :: Eq MediaType
+
+derive instance genericMediaType :: Generic MediaType _
+
+instance showMediaType :: Show MediaType where
+  show s = genericShow s
+
+instance writeForeignMediaType :: WriteForeign MediaType where
+  writeImpl (MediaType f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "schema" (writeImpl x) ]) f._schema) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "examples" (writeImpl x) ]) f._examples) <> (maybe [] (\x -> [ Tuple "encoding" (writeImpl x) ]) f._encoding) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignMediaType :: ReadForeign MediaType where
+  readImpl f = do
+    _schema <- (readProp "schema" f >>= readImpl) <|> (pure Nothing)
+    _example <- (readProp "example" f >>= readImpl) <|> (pure Nothing)
+    _examples <- (readProp "examples" f >>= readImpl) <|> (pure Nothing)
+    _encoding <- (readProp "encoding" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ MediaType { _schema, _example, _examples, _encoding, _x }
+
+_MediaType ∷
+  Tuple
+    ( T_MediaType → MediaType
+    )
+    ( MediaType →
+      Maybe T_MediaType
+    )
+_MediaType =
+  Tuple MediaType
+    ( case _ of
+        MediaType a → Just a
+    )
+
 -- |XML
 type T_XML
   = { _name :: (Maybe String), _namespace :: (Maybe String), _prefix :: (Maybe String), _attribute :: (Maybe Boolean), _wrapped :: (Maybe Boolean), _x :: (Maybe ((OAIMap JSON))) }
@@ -1118,8 +1327,12 @@ type T_XML
 newtype XML
   = XML T_XML
 
-instance eqXML :: Eq XML where
-  eq (XML f0) (XML f1) = (f0._name == f1._name) && (f0._namespace == f1._namespace) && (f0._prefix == f1._prefix) && (f0._attribute == f1._attribute) && (f0._wrapped == f1._wrapped) && (f0._x == f1._x)
+derive instance eqXML :: Eq XML
+
+derive instance genericXML :: Generic XML _
+
+instance showXML :: Show XML where
+  show s = genericShow s
 
 instance writeForeignXML :: WriteForeign XML where
   writeImpl (XML f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "name" (writeImpl x) ]) f._name) <> (maybe [] (\x -> [ Tuple "namespace" (writeImpl x) ]) f._namespace) <> (maybe [] (\x -> [ Tuple "prefix" (writeImpl x) ]) f._prefix) <> (maybe [] (\x -> [ Tuple "attribute" (writeImpl x) ]) f._attribute) <> (maybe [] (\x -> [ Tuple "wrapped" (writeImpl x) ]) f._wrapped) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1147,46 +1360,15 @@ _XML =
         XML a → Just a
     )
 
--- |OAuth2SecurityScheme
-type T_OAuth2SecurityScheme
-  = { _flows :: OAuthFlows, _type :: String, _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype OAuth2SecurityScheme
-  = OAuth2SecurityScheme T_OAuth2SecurityScheme
-
-instance eqOAuth2SecurityScheme :: Eq OAuth2SecurityScheme where
-  eq (OAuth2SecurityScheme f0) (OAuth2SecurityScheme f1) = (f0._flows == f1._flows) && (f0._type == f1._type) && (f0._description == f1._description) && (f0._x == f1._x)
-
-instance writeForeignOAuth2SecurityScheme :: WriteForeign OAuth2SecurityScheme where
-  writeImpl (OAuth2SecurityScheme f) = writeImpl $ FO.fromFoldable ([ Tuple "flows" (writeImpl f._flows) ] <> [ Tuple "type" (writeImpl f._type) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignOAuth2SecurityScheme :: ReadForeign OAuth2SecurityScheme where
-  readImpl f = do
-    _flows <- readProp "flows" f >>= readImpl
-    _type <- readProp "type" f >>= readImpl
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ OAuth2SecurityScheme { _flows, _type, _description, _x }
-
-_OAuth2SecurityScheme ∷
-  Tuple
-    ( T_OAuth2SecurityScheme → OAuth2SecurityScheme
-    )
-    ( OAuth2SecurityScheme →
-      Maybe T_OAuth2SecurityScheme
-    )
-_OAuth2SecurityScheme =
-  Tuple OAuth2SecurityScheme
-    ( case _ of
-        OAuth2SecurityScheme a → Just a
-    )
-
 data Items
   = ItemsAsTuple (Array (ReferenceOr Schema))
   | SingleItem Schema
   | SingleItemReference Reference
 
 derive instance genericItems :: Generic Items _
+
+instance showItemsAsTuple :: Show Items where
+  show = genericShow
 
 instance eqItems :: Eq Items where
   eq = genericEq
@@ -1249,37 +1431,79 @@ _SingleItemReference =
         _ → Nothing
     )
 
--- |Discriminator
-type T_Discriminator
-  = { _propertyName :: String, _mapping :: (Maybe ((OAIMap String))), _x :: (Maybe ((OAIMap JSON))) }
+-- |APIKeySecurityScheme
+type T_APIKeySecurityScheme
+  = { _name :: String, _type :: String, _in :: String, _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
 
-newtype Discriminator
-  = Discriminator T_Discriminator
+newtype APIKeySecurityScheme
+  = APIKeySecurityScheme T_APIKeySecurityScheme
 
-instance eqDiscriminator :: Eq Discriminator where
-  eq (Discriminator f0) (Discriminator f1) = (f0._propertyName == f1._propertyName) && (f0._mapping == f1._mapping) && (f0._x == f1._x)
+derive instance eqAPIKeySecurityScheme :: Eq APIKeySecurityScheme
 
-instance writeForeignDiscriminator :: WriteForeign Discriminator where
-  writeImpl (Discriminator f) = writeImpl $ FO.fromFoldable ([ Tuple "propertyName" (writeImpl f._propertyName) ] <> (maybe [] (\x -> [ Tuple "mapping" (writeImpl x) ]) f._mapping) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+derive instance genericAPIKeySecurityScheme :: Generic APIKeySecurityScheme _
 
-instance readForeignDiscriminator :: ReadForeign Discriminator where
+instance showAPIKeySecurityScheme :: Show APIKeySecurityScheme where
+  show s = genericShow s
+
+instance writeForeignAPIKeySecurityScheme :: WriteForeign APIKeySecurityScheme where
+  writeImpl (APIKeySecurityScheme f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> [ Tuple "type" (writeImpl f._type) ] <> [ Tuple "in" (writeImpl f._in) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignAPIKeySecurityScheme :: ReadForeign APIKeySecurityScheme where
   readImpl f = do
-    _propertyName <- readProp "propertyName" f >>= readImpl
-    _mapping <- (readProp "mapping" f >>= readImpl) <|> (pure Nothing)
+    _name <- readProp "name" f >>= readImpl
+    _type <- readProp "type" f >>= readImpl
+    _in <- readProp "in" f >>= readImpl
+    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
     _x <- xify f
-    pure $ Discriminator { _propertyName, _mapping, _x }
+    pure $ APIKeySecurityScheme { _name, _type, _in, _description, _x }
 
-_Discriminator ∷
+_APIKeySecurityScheme ∷
   Tuple
-    ( T_Discriminator → Discriminator
+    ( T_APIKeySecurityScheme → APIKeySecurityScheme
     )
-    ( Discriminator →
-      Maybe T_Discriminator
+    ( APIKeySecurityScheme →
+      Maybe T_APIKeySecurityScheme
     )
-_Discriminator =
-  Tuple Discriminator
+_APIKeySecurityScheme =
+  Tuple APIKeySecurityScheme
     ( case _ of
-        Discriminator a → Just a
+        APIKeySecurityScheme a → Just a
+    )
+
+-- |Reference
+type T_Reference
+  = { _ref :: String, _x :: (Maybe ((OAIMap JSON))) }
+
+newtype Reference
+  = Reference T_Reference
+
+derive instance eqReference :: Eq Reference
+
+derive instance genericReference :: Generic Reference _
+
+instance showReference :: Show Reference where
+  show s = genericShow s
+
+instance writeForeignReference :: WriteForeign Reference where
+  writeImpl (Reference f) = writeImpl $ FO.fromFoldable ([ Tuple "$ref" (writeImpl f._ref) ] <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignReference :: ReadForeign Reference where
+  readImpl f = do
+    _ref <- readProp "$ref" f >>= readImpl
+    _x <- xify f
+    pure $ Reference { _ref, _x }
+
+_Reference ∷
+  Tuple
+    ( T_Reference → Reference
+    )
+    ( Reference →
+      Maybe T_Reference
+    )
+_Reference =
+  Tuple Reference
+    ( case _ of
+        Reference a → Just a
     )
 
 data Additionals
@@ -1291,6 +1515,9 @@ derive instance genericAdditionals :: Generic Additionals _
 
 instance eqAdditionals :: Eq Additionals where
   eq = genericEq
+
+instance showAdditionals :: Show Additionals where
+  show = genericShow
 
 readForeignAdditionalsAsObject :: Foreign -> F Additionals
 readForeignAdditionalsAsObject f = do
@@ -1350,76 +1577,6 @@ _AdditionalBoolean =
         _ → Nothing
     )
 
--- |MediaType
-type T_MediaType
-  = { _schema :: (Maybe (ReferenceOr Schema)), _example :: (Maybe JSON), _examples :: (Maybe ((OAIMap ((ReferenceOr Example))))), _encoding :: (Maybe ((OAIMap Encoding))), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype MediaType
-  = MediaType T_MediaType
-
-instance eqMediaType :: Eq MediaType where
-  eq (MediaType f0) (MediaType f1) = (f0._schema == f1._schema) && (f0._example == f1._example) && (f0._examples == f1._examples) && (f0._encoding == f1._encoding) && (f0._x == f1._x)
-
-instance writeForeignMediaType :: WriteForeign MediaType where
-  writeImpl (MediaType f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "schema" (writeImpl x) ]) f._schema) <> (maybe [] (\x -> [ Tuple "example" (writeImpl x) ]) f._example) <> (maybe [] (\x -> [ Tuple "examples" (writeImpl x) ]) f._examples) <> (maybe [] (\x -> [ Tuple "encoding" (writeImpl x) ]) f._encoding) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignMediaType :: ReadForeign MediaType where
-  readImpl f = do
-    _schema <- (readProp "schema" f >>= readImpl) <|> (pure Nothing)
-    _example <- (readProp "example" f >>= readImpl) <|> (pure Nothing)
-    _examples <- (readProp "examples" f >>= readImpl) <|> (pure Nothing)
-    _encoding <- (readProp "encoding" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ MediaType { _schema, _example, _examples, _encoding, _x }
-
-_MediaType ∷
-  Tuple
-    ( T_MediaType → MediaType
-    )
-    ( MediaType →
-      Maybe T_MediaType
-    )
-_MediaType =
-  Tuple MediaType
-    ( case _ of
-        MediaType a → Just a
-    )
-
--- |APIKeySecurityScheme
-type T_APIKeySecurityScheme
-  = { _name :: String, _type :: String, _in :: String, _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype APIKeySecurityScheme
-  = APIKeySecurityScheme T_APIKeySecurityScheme
-
-instance eqAPIKeySecurityScheme :: Eq APIKeySecurityScheme where
-  eq (APIKeySecurityScheme f0) (APIKeySecurityScheme f1) = (f0._name == f1._name) && (f0._type == f1._type) && (f0._in == f1._in) && (f0._description == f1._description) && (f0._x == f1._x)
-
-instance writeForeignAPIKeySecurityScheme :: WriteForeign APIKeySecurityScheme where
-  writeImpl (APIKeySecurityScheme f) = writeImpl $ FO.fromFoldable ([ Tuple "name" (writeImpl f._name) ] <> [ Tuple "type" (writeImpl f._type) ] <> [ Tuple "in" (writeImpl f._in) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignAPIKeySecurityScheme :: ReadForeign APIKeySecurityScheme where
-  readImpl f = do
-    _name <- readProp "name" f >>= readImpl
-    _type <- readProp "type" f >>= readImpl
-    _in <- readProp "in" f >>= readImpl
-    _description <- (readProp "description" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ APIKeySecurityScheme { _name, _type, _in, _description, _x }
-
-_APIKeySecurityScheme ∷
-  Tuple
-    ( T_APIKeySecurityScheme → APIKeySecurityScheme
-    )
-    ( APIKeySecurityScheme →
-      Maybe T_APIKeySecurityScheme
-    )
-_APIKeySecurityScheme =
-  Tuple APIKeySecurityScheme
-    ( case _ of
-        APIKeySecurityScheme a → Just a
-    )
-
 -- |HTTPSecurityScheme
 type T_HTTPSecurityScheme
   = { _type :: String, _scheme :: String, _bearerFormat :: (Maybe String), _description :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
@@ -1427,8 +1584,12 @@ type T_HTTPSecurityScheme
 newtype HTTPSecurityScheme
   = HTTPSecurityScheme T_HTTPSecurityScheme
 
-instance eqHTTPSecurityScheme :: Eq HTTPSecurityScheme where
-  eq (HTTPSecurityScheme f0) (HTTPSecurityScheme f1) = (f0._type == f1._type) && (f0._scheme == f1._scheme) && (f0._bearerFormat == f1._bearerFormat) && (f0._description == f1._description) && (f0._x == f1._x)
+derive instance eqHTTPSecurityScheme :: Eq HTTPSecurityScheme
+
+derive instance genericHTTPSecurityScheme :: Generic HTTPSecurityScheme _
+
+instance showHTTPSecurityScheme :: Show HTTPSecurityScheme where
+  show s = genericShow s
 
 instance writeForeignHTTPSecurityScheme :: WriteForeign HTTPSecurityScheme where
   writeImpl (HTTPSecurityScheme f) = writeImpl $ FO.fromFoldable ([ Tuple "type" (writeImpl f._type) ] <> [ Tuple "scheme" (writeImpl f._scheme) ] <> (maybe [] (\x -> [ Tuple "bearerFormat" (writeImpl x) ]) f._bearerFormat) <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1462,8 +1623,12 @@ type T_OpenIdConnectSecurityScheme
 newtype OpenIdConnectSecurityScheme
   = OpenIdConnectSecurityScheme T_OpenIdConnectSecurityScheme
 
-instance eqOpenIdConnectSecurityScheme :: Eq OpenIdConnectSecurityScheme where
-  eq (OpenIdConnectSecurityScheme f0) (OpenIdConnectSecurityScheme f1) = (f0._type == f1._type) && (f0._openIdConnectUrl == f1._openIdConnectUrl) && (f0._description == f1._description) && (f0._x == f1._x)
+derive instance eqOpenIdConnectSecurityScheme :: Eq OpenIdConnectSecurityScheme
+
+derive instance genericOpenIdConnectSecurityScheme :: Generic OpenIdConnectSecurityScheme _
+
+instance showOpenIdConnectSecurityScheme :: Show OpenIdConnectSecurityScheme where
+  show s = genericShow s
 
 instance writeForeignOpenIdConnectSecurityScheme :: WriteForeign OpenIdConnectSecurityScheme where
   writeImpl (OpenIdConnectSecurityScheme f) = writeImpl $ FO.fromFoldable ([ Tuple "type" (writeImpl f._type) ] <> [ Tuple "openIdConnectUrl" (writeImpl f._openIdConnectUrl) ] <> (maybe [] (\x -> [ Tuple "description" (writeImpl x) ]) f._description) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1489,38 +1654,6 @@ _OpenIdConnectSecurityScheme =
         OpenIdConnectSecurityScheme a → Just a
     )
 
--- |Reference
-type T_Reference
-  = { _ref :: String, _x :: (Maybe ((OAIMap JSON))) }
-
-newtype Reference
-  = Reference T_Reference
-
-instance eqReference :: Eq Reference where
-  eq (Reference f0) (Reference f1) = (f0._ref == f1._ref) && (f0._x == f1._x)
-
-instance writeForeignReference :: WriteForeign Reference where
-  writeImpl (Reference f) = writeImpl $ FO.fromFoldable ([ Tuple "$ref" (writeImpl f._ref) ] <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignReference :: ReadForeign Reference where
-  readImpl f = do
-    _ref <- readProp "$ref" f >>= readImpl
-    _x <- xify f
-    pure $ Reference { _ref, _x }
-
-_Reference ∷
-  Tuple
-    ( T_Reference → Reference
-    )
-    ( Reference →
-      Maybe T_Reference
-    )
-_Reference =
-  Tuple Reference
-    ( case _ of
-        Reference a → Just a
-    )
-
 -- |OAuthFlows
 type T_OAuthFlows
   = { _implicit :: (Maybe ImplicitOAuthFlow), _password :: (Maybe PasswordOAuthFlow), _clientCredentials :: (Maybe ClientCredentialsFlow), _authorizationCode :: (Maybe AuthorizationCodeOAuthFlow), _x :: (Maybe ((OAIMap JSON))) }
@@ -1528,8 +1661,12 @@ type T_OAuthFlows
 newtype OAuthFlows
   = OAuthFlows T_OAuthFlows
 
-instance eqOAuthFlows :: Eq OAuthFlows where
-  eq (OAuthFlows f0) (OAuthFlows f1) = (f0._implicit == f1._implicit) && (f0._password == f1._password) && (f0._clientCredentials == f1._clientCredentials) && (f0._authorizationCode == f1._authorizationCode) && (f0._x == f1._x)
+derive instance eqOAuthFlows :: Eq OAuthFlows
+
+derive instance genericOAuthFlows :: Generic OAuthFlows _
+
+instance showOAuthFlows :: Show OAuthFlows where
+  show s = genericShow s
 
 instance writeForeignOAuthFlows :: WriteForeign OAuthFlows where
   writeImpl (OAuthFlows f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "implicit" (writeImpl x) ]) f._implicit) <> (maybe [] (\x -> [ Tuple "password" (writeImpl x) ]) f._password) <> (maybe [] (\x -> [ Tuple "clientCredentials" (writeImpl x) ]) f._clientCredentials) <> (maybe [] (\x -> [ Tuple "authorizationCode" (writeImpl x) ]) f._authorizationCode) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1563,8 +1700,12 @@ type T_Encoding
 newtype Encoding
   = Encoding T_Encoding
 
-instance eqEncoding :: Eq Encoding where
-  eq (Encoding f0) (Encoding f1) = (f0._contentType == f1._contentType) && (f0._headers == f1._headers) && (f0._style == f1._style) && (f0._explode == f1._explode) && (f0._allowReserved == f1._allowReserved) && (f0._x == f1._x)
+derive instance eqEncoding :: Eq Encoding
+
+derive instance genericEncoding :: Generic Encoding _
+
+instance showEncoding :: Show Encoding where
+  show s = genericShow s
 
 instance writeForeignEncoding :: WriteForeign Encoding where
   writeImpl (Encoding f) = writeImpl $ FO.fromFoldable ((maybe [] (\x -> [ Tuple "contentType" (writeImpl x) ]) f._contentType) <> (maybe [] (\x -> [ Tuple "headers" (writeImpl x) ]) f._headers) <> (maybe [] (\x -> [ Tuple "style" (writeImpl x) ]) f._style) <> (maybe [] (\x -> [ Tuple "explode" (writeImpl x) ]) f._explode) <> (maybe [] (\x -> [ Tuple "allowReserved" (writeImpl x) ]) f._allowReserved) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1592,6 +1733,82 @@ _Encoding =
         Encoding a → Just a
     )
 
+-- |ImplicitOAuthFlow
+type T_ImplicitOAuthFlow
+  = { _authorizationUrl :: String, _scopes :: ((OAIMap String)), _refreshUrl :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype ImplicitOAuthFlow
+  = ImplicitOAuthFlow T_ImplicitOAuthFlow
+
+derive instance eqImplicitOAuthFlow :: Eq ImplicitOAuthFlow
+
+derive instance genericImplicitOAuthFlow :: Generic ImplicitOAuthFlow _
+
+instance showImplicitOAuthFlow :: Show ImplicitOAuthFlow where
+  show s = genericShow s
+
+instance writeForeignImplicitOAuthFlow :: WriteForeign ImplicitOAuthFlow where
+  writeImpl (ImplicitOAuthFlow f) = writeImpl $ FO.fromFoldable ([ Tuple "authorizationUrl" (writeImpl f._authorizationUrl) ] <> [ Tuple "scopes" (writeImpl f._scopes) ] <> (maybe [] (\x -> [ Tuple "refreshUrl" (writeImpl x) ]) f._refreshUrl) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignImplicitOAuthFlow :: ReadForeign ImplicitOAuthFlow where
+  readImpl f = do
+    _authorizationUrl <- readProp "authorizationUrl" f >>= readImpl
+    _scopes <- readProp "scopes" f >>= readImpl
+    _refreshUrl <- (readProp "refreshUrl" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ ImplicitOAuthFlow { _authorizationUrl, _scopes, _refreshUrl, _x }
+
+_ImplicitOAuthFlow ∷
+  Tuple
+    ( T_ImplicitOAuthFlow → ImplicitOAuthFlow
+    )
+    ( ImplicitOAuthFlow →
+      Maybe T_ImplicitOAuthFlow
+    )
+_ImplicitOAuthFlow =
+  Tuple ImplicitOAuthFlow
+    ( case _ of
+        ImplicitOAuthFlow a → Just a
+    )
+
+-- |ClientCredentialsFlow
+type T_ClientCredentialsFlow
+  = { _tokenUrl :: String, _refreshUrl :: (Maybe String), _scopes :: (Maybe ((OAIMap String))), _x :: (Maybe ((OAIMap JSON))) }
+
+newtype ClientCredentialsFlow
+  = ClientCredentialsFlow T_ClientCredentialsFlow
+
+derive instance eqClientCredentialsFlow :: Eq ClientCredentialsFlow
+
+derive instance genericClientCredentialsFlow :: Generic ClientCredentialsFlow _
+
+instance showClientCredentialsFlow :: Show ClientCredentialsFlow where
+  show s = genericShow s
+
+instance writeForeignClientCredentialsFlow :: WriteForeign ClientCredentialsFlow where
+  writeImpl (ClientCredentialsFlow f) = writeImpl $ FO.fromFoldable ([ Tuple "tokenUrl" (writeImpl f._tokenUrl) ] <> (maybe [] (\x -> [ Tuple "refreshUrl" (writeImpl x) ]) f._refreshUrl) <> (maybe [] (\x -> [ Tuple "scopes" (writeImpl x) ]) f._scopes) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
+
+instance readForeignClientCredentialsFlow :: ReadForeign ClientCredentialsFlow where
+  readImpl f = do
+    _tokenUrl <- readProp "tokenUrl" f >>= readImpl
+    _refreshUrl <- (readProp "refreshUrl" f >>= readImpl) <|> (pure Nothing)
+    _scopes <- (readProp "scopes" f >>= readImpl) <|> (pure Nothing)
+    _x <- xify f
+    pure $ ClientCredentialsFlow { _tokenUrl, _refreshUrl, _scopes, _x }
+
+_ClientCredentialsFlow ∷
+  Tuple
+    ( T_ClientCredentialsFlow → ClientCredentialsFlow
+    )
+    ( ClientCredentialsFlow →
+      Maybe T_ClientCredentialsFlow
+    )
+_ClientCredentialsFlow =
+  Tuple ClientCredentialsFlow
+    ( case _ of
+        ClientCredentialsFlow a → Just a
+    )
+
 -- |AuthorizationCodeOAuthFlow
 type T_AuthorizationCodeOAuthFlow
   = { _tokenUrl :: String, _authorizationUrl :: String, _refreshUrl :: (Maybe String), _scopes :: (Maybe ((OAIMap String))), _x :: (Maybe ((OAIMap JSON))) }
@@ -1599,8 +1816,12 @@ type T_AuthorizationCodeOAuthFlow
 newtype AuthorizationCodeOAuthFlow
   = AuthorizationCodeOAuthFlow T_AuthorizationCodeOAuthFlow
 
-instance eqAuthorizationCodeOAuthFlow :: Eq AuthorizationCodeOAuthFlow where
-  eq (AuthorizationCodeOAuthFlow f0) (AuthorizationCodeOAuthFlow f1) = (f0._tokenUrl == f1._tokenUrl) && (f0._authorizationUrl == f1._authorizationUrl) && (f0._refreshUrl == f1._refreshUrl) && (f0._scopes == f1._scopes) && (f0._x == f1._x)
+derive instance eqAuthorizationCodeOAuthFlow :: Eq AuthorizationCodeOAuthFlow
+
+derive instance genericAuthorizationCodeOAuthFlow :: Generic AuthorizationCodeOAuthFlow _
+
+instance showAuthorizationCodeOAuthFlow :: Show AuthorizationCodeOAuthFlow where
+  show s = genericShow s
 
 instance writeForeignAuthorizationCodeOAuthFlow :: WriteForeign AuthorizationCodeOAuthFlow where
   writeImpl (AuthorizationCodeOAuthFlow f) = writeImpl $ FO.fromFoldable ([ Tuple "tokenUrl" (writeImpl f._tokenUrl) ] <> [ Tuple "authorizationUrl" (writeImpl f._authorizationUrl) ] <> (maybe [] (\x -> [ Tuple "refreshUrl" (writeImpl x) ]) f._refreshUrl) <> (maybe [] (\x -> [ Tuple "scopes" (writeImpl x) ]) f._scopes) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1634,8 +1855,12 @@ type T_PasswordOAuthFlow
 newtype PasswordOAuthFlow
   = PasswordOAuthFlow T_PasswordOAuthFlow
 
-instance eqPasswordOAuthFlow :: Eq PasswordOAuthFlow where
-  eq (PasswordOAuthFlow f0) (PasswordOAuthFlow f1) = (f0._tokenUrl == f1._tokenUrl) && (f0._refreshUrl == f1._refreshUrl) && (f0._scopes == f1._scopes) && (f0._x == f1._x)
+derive instance eqPasswordOAuthFlow :: Eq PasswordOAuthFlow
+
+derive instance genericPasswordOAuthFlow :: Generic PasswordOAuthFlow _
+
+instance showPasswordOAuthFlow :: Show PasswordOAuthFlow where
+  show s = genericShow s
 
 instance writeForeignPasswordOAuthFlow :: WriteForeign PasswordOAuthFlow where
   writeImpl (PasswordOAuthFlow f) = writeImpl $ FO.fromFoldable ([ Tuple "tokenUrl" (writeImpl f._tokenUrl) ] <> (maybe [] (\x -> [ Tuple "refreshUrl" (writeImpl x) ]) f._refreshUrl) <> (maybe [] (\x -> [ Tuple "scopes" (writeImpl x) ]) f._scopes) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
@@ -1659,72 +1884,4 @@ _PasswordOAuthFlow =
   Tuple PasswordOAuthFlow
     ( case _ of
         PasswordOAuthFlow a → Just a
-    )
-
--- |ClientCredentialsFlow
-type T_ClientCredentialsFlow
-  = { _tokenUrl :: String, _refreshUrl :: (Maybe String), _scopes :: (Maybe ((OAIMap String))), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype ClientCredentialsFlow
-  = ClientCredentialsFlow T_ClientCredentialsFlow
-
-instance eqClientCredentialsFlow :: Eq ClientCredentialsFlow where
-  eq (ClientCredentialsFlow f0) (ClientCredentialsFlow f1) = (f0._tokenUrl == f1._tokenUrl) && (f0._refreshUrl == f1._refreshUrl) && (f0._scopes == f1._scopes) && (f0._x == f1._x)
-
-instance writeForeignClientCredentialsFlow :: WriteForeign ClientCredentialsFlow where
-  writeImpl (ClientCredentialsFlow f) = writeImpl $ FO.fromFoldable ([ Tuple "tokenUrl" (writeImpl f._tokenUrl) ] <> (maybe [] (\x -> [ Tuple "refreshUrl" (writeImpl x) ]) f._refreshUrl) <> (maybe [] (\x -> [ Tuple "scopes" (writeImpl x) ]) f._scopes) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignClientCredentialsFlow :: ReadForeign ClientCredentialsFlow where
-  readImpl f = do
-    _tokenUrl <- readProp "tokenUrl" f >>= readImpl
-    _refreshUrl <- (readProp "refreshUrl" f >>= readImpl) <|> (pure Nothing)
-    _scopes <- (readProp "scopes" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ ClientCredentialsFlow { _tokenUrl, _refreshUrl, _scopes, _x }
-
-_ClientCredentialsFlow ∷
-  Tuple
-    ( T_ClientCredentialsFlow → ClientCredentialsFlow
-    )
-    ( ClientCredentialsFlow →
-      Maybe T_ClientCredentialsFlow
-    )
-_ClientCredentialsFlow =
-  Tuple ClientCredentialsFlow
-    ( case _ of
-        ClientCredentialsFlow a → Just a
-    )
-
--- |ImplicitOAuthFlow
-type T_ImplicitOAuthFlow
-  = { _authorizationUrl :: String, _scopes :: ((OAIMap String)), _refreshUrl :: (Maybe String), _x :: (Maybe ((OAIMap JSON))) }
-
-newtype ImplicitOAuthFlow
-  = ImplicitOAuthFlow T_ImplicitOAuthFlow
-
-instance eqImplicitOAuthFlow :: Eq ImplicitOAuthFlow where
-  eq (ImplicitOAuthFlow f0) (ImplicitOAuthFlow f1) = (f0._authorizationUrl == f1._authorizationUrl) && (f0._scopes == f1._scopes) && (f0._refreshUrl == f1._refreshUrl) && (f0._x == f1._x)
-
-instance writeForeignImplicitOAuthFlow :: WriteForeign ImplicitOAuthFlow where
-  writeImpl (ImplicitOAuthFlow f) = writeImpl $ FO.fromFoldable ([ Tuple "authorizationUrl" (writeImpl f._authorizationUrl) ] <> [ Tuple "scopes" (writeImpl f._scopes) ] <> (maybe [] (\x -> [ Tuple "refreshUrl" (writeImpl x) ]) f._refreshUrl) <> (maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x))
-
-instance readForeignImplicitOAuthFlow :: ReadForeign ImplicitOAuthFlow where
-  readImpl f = do
-    _authorizationUrl <- readProp "authorizationUrl" f >>= readImpl
-    _scopes <- readProp "scopes" f >>= readImpl
-    _refreshUrl <- (readProp "refreshUrl" f >>= readImpl) <|> (pure Nothing)
-    _x <- xify f
-    pure $ ImplicitOAuthFlow { _authorizationUrl, _scopes, _refreshUrl, _x }
-
-_ImplicitOAuthFlow ∷
-  Tuple
-    ( T_ImplicitOAuthFlow → ImplicitOAuthFlow
-    )
-    ( ImplicitOAuthFlow →
-      Maybe T_ImplicitOAuthFlow
-    )
-_ImplicitOAuthFlow =
-  Tuple ImplicitOAuthFlow
-    ( case _ of
-        ImplicitOAuthFlow a → Just a
     )

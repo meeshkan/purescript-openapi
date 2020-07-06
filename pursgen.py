@@ -35,7 +35,10 @@ def to_purescript(ipt, todo, done, toexpt, top=True):
             fromJSONs = 'instance readForeign%s :: ReadForeign %s where\n  readImpl f = do\n%s\n    pure $ %s %s' % (nm, nm, '\n'.join([('    %s <- %s' % (dashize(cstr), 'readProp "%s" f >>= readImpl' % cstr if dstr[:5] != 'Maybe' else '(readProp "%s" f >>= readImpl) <|> (pure Nothing)' % cstr)) if cstr != 'x' else '    _x <- xify f' for i, (cstr, dstr) in enumerate(accessors)]), nm, '{' + ','.join([dashize(cstr) for (cstr, _) in accessors]) + '}' )
             toJSONs = 'instance writeForeign%s :: WriteForeign %s where\n  writeImpl (%s f) =\n    writeImpl $ FO.fromFoldable (%s)\n' % (nm, nm, nm, ' <> '.join([('[Tuple "%s" (writeImpl f.%s)]' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if dstr[:5] != 'Maybe' else ('(maybe [] (\\x -> [Tuple "%s" (writeImpl x)]) f.%s)' % (cstr, '_'+cstr if cstr != '$ref' else '_ref')) if cstr != 'x' else '(maybe [] (\(OAIMap x) -> map (\(Tuple a b) -> (Tuple a $ writeImpl b)) (Map.toUnfoldable x)) f._x)' for cstr, dstr in accessors]))
             #makeShow = 'instance show%s :: Show %s where\n  show (%s f) = show ("%s" <> "(" <> intercalate ", " (filter (not <<< null) [%s]) <> ")")' % (nm, nm, nm, nm, ', '.join(['"%s = " <> show f.%s' % (cstr[1:], cstr) if dstr[:5] != 'Maybe'  else 'maybe "" (\\x -> "%s = Just " <> show x) f.%s' % (cstr[1:], cstr) for cstr, dstr in dashproto]))
-            makeEq = 'instance eq%s :: Eq %s where\n  eq (%s f0) (%s f1) = %s\n' % (nm, nm, nm, nm, ' && '.join(['(f0.%s == f1.%s)' % (v,v) for (v, x) in dashproto ]))
+            #makeEq = 'instance eq%s :: Eq %s where\n  eq (%s f0) (%s f1) = %s\n' % (nm, nm, nm, nm, ' && '.join(['(f0.%s == f1.%s)' % (v,v) for (v, x) in dashproto ]))
+            makeEq = 'derive instance eq%s :: Eq %s\n' % (nm, nm)
+            makeGeneric = 'derive instance generic%s :: Generic %s _\n' % (nm, nm)
+            makeShow = 'instance show%s :: Show %s where\n  show s = genericShow s' % (nm, nm)
             toexpt = {'%s(..)' % nm, 'T_%s' % nm, '_%s' % nm, *toexpt}
             prism = '''_%s ∷
   Tuple
@@ -50,7 +53,7 @@ _%s =
         %s a → Just a
     )
 ''' % (nm, nm, nm, nm, nm, nm, nm, nm)
-            return comment + '\n' + data + '\n\n' + ("newtype %s = %s T_%s\n\n" % (nm, nm, nm)) + makeEq + '\n\n' + toJSONs + '\n' + fromJSONs + '\n' + prism, todo, {ipt, *done}, toexpt
+            return comment + '\n' + data + '\n\n' + ("newtype %s = %s T_%s\n\n" % (nm, nm, nm)) + makeEq + '\n\n' + makeGeneric + '\n\n' + makeShow + '\n\n' + toJSONs + '\n' + fromJSONs + '\n' + prism, todo, {ipt, *done}, toexpt
         else:
             return (ipt.__name__, {ipt, *todo}, done, toexpt)
     elif ipt == str:
@@ -76,6 +79,9 @@ _%s =
 derive instance genericAdditionals  :: Generic Additionals  _
 instance eqAdditionals :: Eq Additionals where
   eq = genericEq
+
+instance showAdditionals :: Show Additionals where
+  show = genericShow
 
 readForeignAdditionalsAsObject :: Foreign -> F Additionals
 readForeignAdditionalsAsObject f = do
@@ -143,6 +149,10 @@ _AdditionalBoolean =
                         out = '''
 data Items = ItemsAsTuple (Array (ReferenceOr Schema)) | SingleItem Schema | SingleItemReference Reference
 derive instance genericItems  :: Generic Items  _
+
+instance showItemsAsTuple :: Show Items where
+  show = genericShow
+
 instance eqItems :: Eq Items where
   eq = genericEq
 
@@ -235,6 +245,10 @@ _SingleItemReference =
       ReferenceSS Reference
 
 derive instance genericSecuritySchema  :: Generic SecuritySchema  _
+
+instance showSecuritySchema  :: Show SecuritySchema  where
+  show = genericShow
+
 instance eqSecuritySchema :: Eq SecuritySchema where
   eq = genericEq'''
                     out += '''
@@ -374,9 +388,11 @@ if __name__ == '__main__':
     out += '''import Prelude
 import Control.Alt ((<|>))
 import Data.Array (findIndex)
+import Data.Newtype (class Newtype)
 import Data.Generic.Rep (class Generic)
 import Data.Generic.Rep.Eq (genericEq)
 import Data.Map as Map
+import Data.Generic.Rep.Show (genericShow)
 import Data.Maybe (Maybe(..), maybe)
 import Data.Nullable (Nullable, null)
 import Data.String.Utils (startsWith)
@@ -390,6 +406,14 @@ import Simple.JSON (class ReadForeign, readImpl, class WriteForeign, writeImpl)
 
 
 newtype OAIMap b = OAIMap (Map.Map String b)
+
+derive instance newtypeOAIMap :: Newtype (OAIMap b) _
+
+derive instance genericOAIMap :: Generic (OAIMap b) _
+
+instance showOAIMap :: Show b => Show (OAIMap b) where
+ show = genericShow
+
 derive newtype instance eqOAIMap :: (Eq a) => Eq (OAIMap a)
 
 _OAIMap ::
@@ -434,6 +458,10 @@ instance writeForeignJSON :: WriteForeign JSON where
 
 instance eqJSON :: Eq JSON where
   eq a b = genericEq a b
+
+instance showJSON :: Show JSON where
+  show s = genericShow s
+
 '''
     out += 'hack :: ∀ a b c. (a -> c) -> (a -> b -> c)\nhack o = (\\x -> (\\y -> o x))\n\n'
     out += '''xify :: Foreign -> F (Maybe (OAIMap JSON))
@@ -445,6 +473,11 @@ xify f = do
     out += 'isRef f = keys f >>= pure <<< (/=) Nothing <<< findIndex ((==) "$ref")\n\n'
     out += '''data ReferenceOr a = Ref Reference | RealDeal a
 derive instance eqReferenceOr :: (Eq a) => Eq (ReferenceOr a)
+
+derive instance genericReferenceOr :: Generic (ReferenceOr a) _
+
+instance showReferenceOr  :: (Show a) => Show (ReferenceOr a) where
+  show = genericShow
 
 
 _Ref ∷
@@ -487,6 +520,11 @@ instance writeForeignReferenceOr :: (WriteForeign a) => WriteForeign (ReferenceO
 '''
     out += '''data BooleanInt = ABoolean Boolean | AnInt Int
 derive instance genericBooleanInt  :: Generic BooleanInt  _
+
+
+instance showBooleanInt  :: Show BooleanInt where
+  show = genericShow
+
 instance eqBooleanInt :: Eq BooleanInt where
   eq = genericEq
 '''
@@ -532,6 +570,6 @@ _AnInt =
         for item in {*todo}:
             o, todo, done, toexpt = to_purescript(item, todo, done, toexpt)
             out += o+'\n'
-    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr(..)', '_Ref', '_RealDeal', 'BooleanInt', 'OAIMap(..)', '_OAIMap', '_ABoolean', '_AnInt', 'JSON(..)', *toexpt}))
+    out = out.replace('FOOBAR', ',\n '.join({'ReferenceOr(..)', '_Ref', '_RealDeal', 'BooleanInt(..)', 'OAIMap(..)', '_OAIMap', '_ABoolean', '_AnInt', 'JSON(..)', *toexpt}))
     with open('./src/Data/OpenAPI/V300.purs', 'w', encoding='utf-8') as hask:
         hask.write(out)
