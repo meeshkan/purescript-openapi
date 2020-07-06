@@ -83,9 +83,6 @@ openAPITest fn = do
   size flatJSON `shouldEqual` size flatReJson
   union (difference flatJSON flatReJson) (difference flatReJson flatJSON) `shouldEqual` empty
 
--- This is the main function that does the PBT and shows the results
--- It should show { failures: Nil, successes: 100, total: 100 }
--- To run more than 100 tests, change the number 100 below
 main ∷ Effect Unit
 main =
   launchAff_
